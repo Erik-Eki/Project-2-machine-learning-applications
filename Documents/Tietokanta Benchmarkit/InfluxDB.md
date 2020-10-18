@@ -17,7 +17,15 @@ CLI/SHELL:
 docker run --name=influxdb -d -p 8086:8086 influxdb
 docker exec -it influxdb influx
 ```
+
 `PS> docker run -p 8086:8086 -v ${PWD}:\GitHub\Erik\projekti-2-team-fox\Tietokannat\InfluxDB influxdb`
+
+Se miten itse loin Windows 10:llä:
+
+`docker run --name influxdb -p 8086:8086 -v D:\GitHub\Erik\projekti-2-team-fox\Tietokannat\InfluxDB:/var/lib/influxdb influxdb -config /var/lib/influxdb/influxdb.conf`
+- Ensin on tuo polku minne tallennan tietokanna omalla koneella
+- Erotettu : on influDB:n polku, mikä on sidottu kiinni oman koneeni polkuun.
+- -config käynnistää ottamalla config-tiedoston huomioon (joka vaaditaan jos tahtoo käynnistää adminina)
 
 <dl>
   <dt>InfluxDB käyttää portteja</dt>
@@ -42,4 +50,16 @@ InfluxDB on hieman erilainen muihin tietokantoihin verrattuna:
 | tags | indeksoitu kolumni |
 | field | indeksoimaton kolumni |
 
+InfluxDB tarvitsee vähintään yhden käyttäjän: Adminin.
+
+Avataan konsoli tietokantaan:
+
 `docker exec -it influxdb /bin/bash`
+
+Luodaan Admin-käyttäjä tietokannassa:
+
+`CREATE USER admin WITH PASSWORD 'teamfox' WITH ALL PRIVILEGES`
+
+Mene sisälle tietokantaan adminina:
+
+`docker exec -it influxdb influx -username admin -password teamfox`
