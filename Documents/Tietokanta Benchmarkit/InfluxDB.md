@@ -7,7 +7,9 @@
 ## Kontin pystytys
 
 Linux:
+
 `$ docker run -p 8086:8086 -v $PWD:/var/lib/influxdb influxdb`
+
 CLI/SHELL:
 ```
 docker run --name=influxdb -d -p 8086:8086 influxdb
