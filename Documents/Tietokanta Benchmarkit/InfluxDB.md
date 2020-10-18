@@ -19,24 +19,18 @@ docker exec -it influxdb influx
 ```
 `PS> docker run -p 8086:8086 -v ${PWD}:\GitHub\Erik\projekti-2-team-fox\Tietokannat\InfluxDB influxdb`
 
-InfluxDB käyttää portteja
-
-: 8086 HTTP API portti
-: 2003 Graphite support (jos on päällä)
-
 <dl>
-  <dt>First Term</dt>
-  <dd>This is the definition of the first term.</dd>
-  <dt>Second Term</dt>
-  <dd>This is one definition of the second term. </dd>
-  <dd>This is another definition of the second term.</dd>
+  <dt>InfluxDB käyttää portteja</dt>
+  <dd>8086 HTTP API portti</dd>
+  <dd>2003 Graphite support (jos on päällä)</dd>
 </dl>
 
 HTTP API portti avautuu automaattisesti docker run -P kommennon suoritettua.
 
-Huom:
-: Oletuksena InfluxDB lähettää telemetriatiedot takaisin InfluxDataan. InfluxData-telemetriasivu tarjoaa tietoja siitä, mitä tietoja kerätään ja miten niitä käytetään.
-: Jos haluaa estää telemetriatietojen lähettämisen takaisin InfluxDataan, lisätään `--reporting-disabled` komennon loppuun käynnistettäessä InfluxDB-konttia.
+<d1>
+  <dt>Huom:</dt>
+  <dd>Oletuksena InfluxDB lähettää telemetriatiedot takaisin InfluxDataan. InfluxData-telemetriasivu tarjoaa tietoja siitä, mitä tietoja kerätään ja miten niitä käytetään.</dd>
+  <dd>Jos haluaa estää telemetriatietojen lähettämisen takaisin InfluxDataan, lisätään `--reporting-disabled` komennon loppuun käynnistettäessä InfluxDB-konttia.</dd>
 
 ## InfluxDB komentorivi
 
