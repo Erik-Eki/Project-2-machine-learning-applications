@@ -1,7 +1,9 @@
 [InfluxDB Dockerilla (Linux)](https://hub.docker.com/_/influxdb/)
+
 [InfluxDB Dockerilla (Windows 10)](https://www.open-plant.com/knowledge-base/how-to-install-influxdb-docker-for-windows-10/)
 
 # Docker
+
 ## Kontin pystytys
 
 Linux:
