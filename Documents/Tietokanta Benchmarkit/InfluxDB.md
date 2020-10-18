@@ -63,3 +63,5 @@ Luodaan Admin-käyttäjä tietokannassa:
 Mene sisälle tietokantaan adminina:
 
 `docker exec -it influxdb influx -username admin -password teamfox`
+
+Nyt, kun menee selaimeen ja menee osoitteeseen http://localhost:8086/query?q=show databases, nähdään tietokanta.
