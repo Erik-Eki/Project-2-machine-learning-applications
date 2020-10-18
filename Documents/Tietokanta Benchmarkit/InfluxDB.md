@@ -32,6 +32,11 @@ HTTP API portti avautuu automaattisesti docker run -P kommennon suoritettua.
   <dd>Oletuksena InfluxDB lähettää telemetriatiedot takaisin InfluxDataan. InfluxData-telemetriasivu tarjoaa tietoja siitä, mitä tietoja kerätään ja miten niitä käytetään.</dd>
   <dd>Jos haluaa estää telemetriatietojen lähettämisen takaisin InfluxDataan, lisätään `--reporting-disabled` komennon loppuun käynnistettäessä InfluxDB-konttia.</dd>
 
-## InfluxDB komentorivi
+## InfluxDB
+
+InfluxDB on hieman erilainen muihin tietokantoihin verrattuna:
+| measurements | SQL taulu |
+| tags | indeksoitu kolumni |
+| field | indeksoimaton kolumni |
 
 `docker exec -it influxdb /bin/bash`
