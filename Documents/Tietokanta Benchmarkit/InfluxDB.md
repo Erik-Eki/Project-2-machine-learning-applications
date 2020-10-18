@@ -2,6 +2,8 @@
 
 [InfluxDB Dockerilla (Windows 10)](https://www.open-plant.com/knowledge-base/how-to-install-influxdb-docker-for-windows-10/)
 
+[[_TOC_]]
+
 # Docker
 
 ## Kontin pystytys
@@ -18,6 +20,7 @@ docker exec -it influxdb influx
 `PS> docker run -p 8086:8086 -v ${PWD}:\GitHub\Erik\projekti-2-team-fox\Tietokannat\InfluxDB influxdb`
 
 InfluxDB käyttää portteja
+
 : 8086 HTTP API portti
 : 2003 Graphite support (jos on päällä)
 
