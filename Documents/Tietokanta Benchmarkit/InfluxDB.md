@@ -36,8 +36,9 @@ HTTP API portti avautuu automaattisesti docker run -P kommennon suoritettua.
 
 InfluxDB on hieman erilainen muihin tietokantoihin verrattuna:
 
+| InfluxDB | SQL |
 | :--- | :---: |
-| measurements | SQL taulu |
+| measurements | taulu |
 | tags | indeksoitu kolumni |
 | field | indeksoimaton kolumni |
 
