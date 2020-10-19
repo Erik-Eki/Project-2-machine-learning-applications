@@ -81,3 +81,22 @@ Mene sisälle tietokantaan adminina:
 `docker exec -it influxdb influx -username admin -password teamfox`
 
 Nyt, kun menee selaimeen ja menee osoitteeseen http://localhost:8086/query?q=show databases, nähdään tietokanta.
+
+### Tietokantaa lisääminen
+
+`CREATE DATABASE <tietokanta>`
+
+`USE <tietokanta>`
+
+`INSERT sensordata,node_id=0i timestamp="empty",x=0i,y=0i,z=0i,q=0i`
+
+sensordata,node_id==0i timestamp="empty",x=0i,y=0i,z=0i,q=0i
+|data point|merkitys| 
+|:---|:---:|
+|sensordata|measurement|
+|node_id|tag set|
+|timestamp|field set|
+|x|field set|
+|y|field set|
+|z|field set|
+|q|field set|
