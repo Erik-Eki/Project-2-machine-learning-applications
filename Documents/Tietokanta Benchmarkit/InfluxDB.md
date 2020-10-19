@@ -4,6 +4,22 @@
 
 [[_TOC_]]
 
+# InfluxDB
+InfluxDB on Go:lla koodattu aikasarjatietokanta (time series database), joka eroaa relaatiotietokannoista.
+
+Aikasarja on periaatteessa sarja pisteitä, jotka on indeksoitu aikajärjestyksessä. Kaikilla sarakkeilla on siis erityinen aikasarake.
+
+Esimerkkejä aikasarjan tiedoista ovat:
+- Työttömyyden tason mittaaminen jokaisen kuukauden aikana
+- Enemmän tietyllä hetkellä myydyn tuotteen seuranta verkkokauppasivustolla.
+- Seuraavan tuotteen seuranta verkkokaupan verkkosivustolla
+- Säännöllisin väliajoin otettujen osakkeiden ja osakkeiden hinta.
+
+## Käyttöliittymä
+InfluxDB tarjoaa 2 käyttöympäristöä:
+- UI selaimessa
+- Terminaali
+
 # Docker
 
 ## Kontin pystytys
@@ -40,7 +56,7 @@ HTTP API portti avautuu automaattisesti docker run -P kommennon suoritettua.
   <dd>Oletuksena InfluxDB lähettää telemetriatiedot takaisin InfluxDataan. InfluxData-telemetriasivu tarjoaa tietoja siitä, mitä tietoja kerätään ja miten niitä käytetään.</dd>
   <dd>Jos haluaa estää telemetriatietojen lähettämisen takaisin InfluxDataan, lisätään `--reporting-disabled` komennon loppuun käynnistettäessä InfluxDB-konttia.</dd>
 
-## InfluxDB
+## InfluxDB:n toiminta
 
 InfluxDB on hieman erilainen muihin tietokantoihin verrattuna:
 
