@@ -103,3 +103,7 @@ Nyt, kun menee selaimeen ja menee osoitteeseen http://localhost:8086/query?q=sho
 Näytä koko "taulu":
 
 `SELECT * FROM sensordata`
+
+Tee csv tiedosto taulukosta root kansioon:
+
+`influx -username admin -password teamfox -database iiwari_org -execute "SELECT * FROM sensordata" -format csv > test.csv`
