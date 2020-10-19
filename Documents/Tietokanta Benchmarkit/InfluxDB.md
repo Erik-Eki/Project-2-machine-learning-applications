@@ -100,6 +100,8 @@ Nyt, kun menee selaimeen ja menee osoitteeseen http://localhost:8086/query?q=sho
 | z | field set |
 | q | field set |
 
+Merkkijonot on laitettava lainausmerkkeihin vain, kun niitä käytetään _field_-arvoina.
+
 Näytä koko "taulu":
 
 `SELECT * FROM sensordata`
