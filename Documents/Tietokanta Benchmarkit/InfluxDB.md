@@ -91,8 +91,8 @@ Nyt, kun menee selaimeen ja menee osoitteeseen http://localhost:8086/query?q=sho
 `INSERT sensordata,node_id=0i timestamp="empty",x=0i,y=0i,z=0i,q=0i`
 
 sensordata,node_id==0i timestamp="empty",x=0i,y=0i,z=0i,q=0i
-|data point|merkitys| 
-|:---|:---:|
+| data point | merkitys | 
+| :--- |:---: |
 |sensordata|measurement|
 |node_id|tag set|
 |timestamp|field set|
