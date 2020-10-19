@@ -4,7 +4,7 @@
 
 # Gitlabin Wikissä on yleinen dokumentaatio.
 
-Keskiviikkoisin tavataan koululla, muutoin ryvetään kotona itsesäälissä ja kuunnellaan David Bowieta.
+Torstaisin tavataan koululla, muutoin ryvetään kotona itsesäälissä ja kuunnellaan David Bowieta.
 
 # Scrummaster
 Muistaa pitää daily scrumit, demot ja retrot.
