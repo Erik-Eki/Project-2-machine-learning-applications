@@ -99,3 +99,7 @@ Nyt, kun menee selaimeen ja menee osoitteeseen http://localhost:8086/query?q=sho
 | y | field set |
 | z | field set |
 | q | field set |
+
+Näytä koko "taulu":
+
+`SELECT * FROM sensordata`
