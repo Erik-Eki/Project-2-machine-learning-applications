@@ -4,7 +4,6 @@
 
 [[_TOC_]]
 
-# InfluxDB
 InfluxDB on Go:lla koodattu aikasarjatietokanta (time series database), joka eroaa relaatiotietokannoista.
 
 Aikasarja on periaatteessa sarja pisteitä, jotka on indeksoitu aikajärjestyksessä. Kaikilla sarakkeilla on siis erityinen aikasarake.
@@ -56,6 +55,9 @@ HTTP API portti avautuu automaattisesti docker run -P kommennon suoritettua.
   <dd>Oletuksena InfluxDB lähettää telemetriatiedot takaisin InfluxDataan. InfluxData-telemetriasivu tarjoaa tietoja siitä, mitä tietoja kerätään ja miten niitä käytetään.</dd>
   <dd>Jos haluaa estää telemetriatietojen lähettämisen takaisin InfluxDataan, lisätään `--reporting-disabled` komennon loppuun käynnistettäessä InfluxDB-konttia.</dd>
 
+---
+
+# InfluxDB
 ## InfluxDB:n toiminta
 
 InfluxDB on hieman erilainen muihin tietokantoihin verrattuna:
@@ -106,6 +108,118 @@ Näytä koko "taulu":
 
 `SELECT * FROM sensordata`
 
-Tee csv tiedosto taulukosta root kansioon:
+Tee csv tiedosto taulukosta root-kansioon:
 
 `influx -username admin -password teamfox -database iiwari_org -execute "SELECT * FROM sensordata" -format csv > test.csv`
+
+## Bulk-populointi
+
+[Tutoriaali csv tiedoston lukemisen Influxiin:](https://medium.com/@dganais/getting-started-writing-data-to-influxdb-54ce99fdeb3e)
+
+Valitettavasti, InfluxDB ei tue suoraan csv.tiedoston lukemista tietokantaa, vaan ne pitää muuttaa tekstitiedostoksi, jossa rivit ovat InfluxDB:n ymmärtäviä line protokollaa.
+
+Tehdään tämä Pythonilla:
+
+### Alustus
+Otetaan csv-tiedosto käyttöön:
+```python=
+import pandas as pd
+
+df = pd.read_csv("./node_3200.csv")
+df["measurement"] = ['sensordata' for t in range(len(df))]
+df.head()
+```
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_7799c97d3be6d7af01015acab17278b6.png)
+
+Muutetaanpas tuo '*timestamp*' vielä järkevään muotoon:
+```python=
+df['timestamp'] =df['timestamp'].astype(str)
+df['timestamp'] = df['timestamp'].str.slice(2, -7)
+
+df['timestamp'] = df['timestamp'].astype('datetime64[ns]')
+df['timestamp'] = pd.Series(df['timestamp']).dt.round("S")
+df
+```
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_3dc5744004b76d16500f6230eef61d75.png)
+
+### Formatointi tekstitiedostoon
+Ja näin se pitää formatoida tekstitiedostoon (Huom, "q" kolumnia ei otettu mukaan):
+```python=
+lines = [str(df["measurement"][d]) 
+         + ",type=BTC" 
+         + " " 
+         + "timestamp=" + str(df["timestamp"][d]) + "," 
+         + "x=" + str(df["x"][d]) + ","
+         + "y=" + str(df["y"][d]) + ","
+         + "z=" + str(df["z"][d]) + ","
+         + "node_id=" + str(df["node_id"][d]) for d in range(len(df))]
+```
+
+Tältä se näyttää:
+```
+sensordata timestamp="2007-03-19 11:46:19",x=0,y=0,z=0,node_id=3200
+sensordata timestamp="2007-03-19 11:46:20",x=0,y=0,z=0,node_id=3200
+sensordata timestamp="2007-03-19 11:46:21",x=0,y=0,z=0,node_id=3200
+sensordata timestamp="2007-03-19 11:46:22",x=0,y=0,z=0,node_id=3200
+```
+
+Tämä pitää lisätä tekstitiedoston alkuun:
+
+```
+# DDL
+CREATE DATABASE iiwari_org
+# DML
+# CONTEXT-DATABASE: iiwari_org
+```
+
+- **DDL** luo autogeenitietokannan nimeltä "*iiwari_org*". 
+- **DML** määrittää, mitä tietokantaa käytetään, jos olet jo luonut tietokannan.
+
+### Tietokannan populointi tekstitiedostosta
+Tällä loitsulla sitten populoidaan tietokanta:
+
+```influx -import -path=/var/lib/influxdb/import.txt -precision=ns -username admin -password teamfox```
+
+Käsittelyn jälkeen, lopussa tulostuu näin:
+
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_31277d0c07eea9458bb2dca0ce0efe4e.png)
+
+Voidaan tarkistaa miten populointi onnistui:
+
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_b269e41fe07aa86147735b52afd63d19.png)
+
+---
+
+## (Ei toimi) Tietokannan populoiminen InfluxDB Cloudiin
+
+Tehdään samat alku valmistelut kuin edellisessä kohdassa, mutta ei kirjoiteta dataa tekstitiedostoon vaan suoraan InfluxDB Cloudiin:
+```python=
+from datetime import datetime
+
+from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client.client.write_api import SYNCHRONOUS
+
+# Täytetään tiedot.
+# Tokenin voi luo InfluxDB Cloudin UI:ssa "Data" > "Tokens"
+token = "F3TMKn-fKxzeT_XNWMl073TDcDdg-27OaxJtc-FC3NW1vO4Wx-SV3Vrhoju5a5vGvyJC4yEFO5zlqNONExXlqg=="
+org = "eriko.oy38@gmail.com"
+bucket = "eriko.oy38's Bucket"
+
+# Alustetaan client
+client = InfluxDBClient(url="https://eu-central-1-1.aws.cloud2.influxdata.com", token=token)
+
+# Alustetaan write-API
+write_api = client.write_api(write_options=SYNCHRONOUS)
+
+# Muutetaan datasetti pandasin dataframiksi
+dataframe = pd.DataFrame(df)
+
+# Kirjoitetaan tietokantaan
+write_api.write(bucket.name, record=dataframe, data_frame_measurement_name='sensordata')
+
+# Suljetaan client
+write_api.__del__()
+client.__del__()
+```
+
+---
