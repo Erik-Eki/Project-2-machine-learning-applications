@@ -109,10 +109,25 @@ Tuloksiksi sain sekuntteina:
 
 ### BULL BLADE
 
-asd
+Tuloksiksi sain sekuntteina:
+11.718, 11.724, 11.746, 11.715, 11.696, 
+11.687, 11.692, 11.666, 11.710, 11.725
 
 ## Kirjoitus-nopeudet
 
+### OMA RAUTA
+
+10 kertaa suoritettu ```time ./populate-mariadb.sh```
+
+Tulokset sekuntteina:
+37.147, 34.714, 35.078, 34.781, 34.957,
+34.957, 35.015, 35.270, 35.882, 36.610
+
+### BULL BLADE
+
+Tulokset sekuntteina:
+80.089, 81.282, 79.223, 78.801, 78.504,
+78.629, 78.659, 77.972, 80.684, 79.761
 
 
 10 kertaa suoritettu ```time ./populate-mariadb.sh```
