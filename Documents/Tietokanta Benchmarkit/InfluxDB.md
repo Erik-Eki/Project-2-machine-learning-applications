@@ -188,6 +188,42 @@ Voidaan tarkistaa miten populointi onnistui:
 
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_b269e41fe07aa86147735b52afd63d19.png)
 
+## Tietokannasta lukeminen Pythonilla
+
+Näin datan voi lukea localhostilla:
+
+```python=
+import pandas as pd
+from influxdb import InfluxDBClient
+
+# Alustetaan influxing client, täytetään tiedot
+client = InfluxDBClient(host='localhost', port=8086, username='admin', password='teamfox')
+
+# Tämä on periaatteessa "SHOW DATABASES" komento influxissa
+client.get_list_database()
+
+# "USE iiwari_org"
+client.switch_database('iiwari_org')
+
+# Tehdään hakeminen
+tables = client.query('SELECT * FROM sensordata LIMIT 20')
+
+# Käydään rivit läpi
+test = []
+for table in tables:
+    # Lisätään listaan
+    test.append(table)
+
+# Lisätään pandasin dataframeen
+for i in test:
+    df = pd.DataFrame.from_dict(i)
+df
+```
+Tulos:
+
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_b5377b7066acc8ed5c700644e0c239c8.png)
+
+
 ---
 
 ## (Ei toimi) Tietokannan populoiminen InfluxDB Cloudiin
