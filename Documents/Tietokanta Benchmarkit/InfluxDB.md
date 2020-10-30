@@ -112,7 +112,7 @@ Tee csv tiedosto taulukosta root-kansioon:
 
 `influx -username admin -password teamfox -database iiwari_org -execute "SELECT * FROM sensordata" -format csv > test.csv`
 
-## Bulk-populointi
+## Populointi
 
 [Tutoriaali csv tiedoston lukemisen Influxiin:](https://medium.com/@dganais/getting-started-writing-data-to-influxdb-54ce99fdeb3e)
 
@@ -162,6 +162,64 @@ sensordata timestamp="2007-03-19 11:46:20",x=0,y=0,z=0,node_id=3200
 sensordata timestamp="2007-03-19 11:46:21",x=0,y=0,z=0,node_id=3200
 sensordata timestamp="2007-03-19 11:46:22",x=0,y=0,z=0,node_id=3200
 ```
+
+### Populointi monella tiedostolla
+
+Yhdistetään kaikki csv tiedostot yhdeksi
+```python=
+import pandas as pd
+import glob
+
+path = r'/home/jovyan/work/projekti-2-team-fox/' # use your path
+all_files = glob.glob(path + "/*.csv")
+
+li = []
+
+for filename in all_files:
+    df = pd.read_csv(filename, index_col=None, header=0)
+    li.append(df)
+
+df = pd.concat(li, axis=0, ignore_index=True)
+df
+```
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_62067342a40efd5525a50ced89f6f556.png)
+
+Lisätään measurement
+```python=
+df["measurement"] = ['sensordata' for t in range(len(df))]
+df.head()
+```
+
+Muutetaan tekstitiedostoon
+```python=
+import random
+
+@timerfunc
+
+def convert():
+    
+    %time
+    
+    lines = [str(df["measurement"][d]) 
+             + " " 
+             + 'timestamp="' + str(df["timestamp"][d]) + '",' 
+             + "x=" + str(df["x"][d]) + ","
+             + "y=" + str(df["y"][d]) + ","
+             + "z=" + str(df["z"][d]) + ","
+             + "q=" + str(df["q"][d]) + ","
+             + "node_id=" + str(df["node_id"][d]) for d in range(len(df))]
+    return lines
+
+def write_to_txt(text):
+    thefile = open('import.txt', 'a+')
+    for item in text:
+        thefile.write("%s\n" % item)
+        
+if __name__ == '__main__':
+    write_to_txt(convert())
+```
+
+Kummassakin esimerkissä:
 
 Tämä pitää lisätä tekstitiedoston alkuun:
 
