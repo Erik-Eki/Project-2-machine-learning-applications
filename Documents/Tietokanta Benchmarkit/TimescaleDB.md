@@ -117,5 +117,10 @@ df.head(10)
 
 ### Benchmark
 
+Väsäsin muutaman funktion, jolla benchmarkkaus saadaan tehtyä yhteyden avulla (olettaen, että Pythonilla tehdään muihinkin tietokantoihin kyselyt samalla tavalla, kuin TimescaleDB:seen.)
+
+Eli, kun yhtys on aikaisemmin luotu, voidaan seuraavilla funktioilla testata, kuinka kyselyiden kesto kasvaa, kun haettava datan määrä kasvaa. Toisella funktiolla voidaan testata vähän isommalla datamäärällä, kuinka paljon hajontaa kyselyn aikaan tulee, kun sama kysely toistetaan useamman kerran.
+```
+
 
 
