@@ -108,6 +108,7 @@ df = pd.DataFrame(cursor.fetchall(), columns=column_names)
 # Suljetaan yhteys
 if(connection):
     cursor.close()
+    connection.close()
     
 df.head(10)
 ```
