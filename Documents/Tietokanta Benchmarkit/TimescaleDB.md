@@ -111,8 +111,8 @@ if(connection):
     connection.close()
     
 df.head(10)
-```
 
+```
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_40169c2d1232fbf100d6aa7d17e364bd.png)
 
 ### Benchmark
@@ -120,7 +120,6 @@ df.head(10)
 Väsäsin muutaman funktion, jolla benchmarkkaus saadaan tehtyä yhteyden avulla (olettaen, että Pythonilla tehdään muihinkin tietokantoihin kyselyt samalla tavalla, kuin TimescaleDB:seen.)
 
 Eli, kun yhtys on aikaisemmin luotu, voidaan seuraavilla funktioilla testata, kuinka kyselyiden kesto kasvaa, kun haettava datan määrä kasvaa. Toisella funktiolla voidaan testata vähän isommalla datamäärällä, kuinka paljon hajontaa kyselyn aikaan tulee, kun sama kysely toistetaan useamman kerran.
-```
 
 
-
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_e861e23f68b06232463639e256eafc78.png)
