@@ -132,8 +132,8 @@ CockroachDB ja YagabyteDB meiltä jäi vielä benchmarkkaamatta.
 Tarkistellaan tilannetta uudestaan, kun saadaan loput tietokannat benchmarkattua.
 
 Tässä kuitenkin kuvaaja TimescalenDB:n ja MariaDB:n tuloksista.
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_f45df1941377abe9b04bda4b3ae45efc.png)
 
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_e861e23f68b06232463639e256eafc78.png)
 
 Otsikko kertoo millä kyselyllä dataa on haettu tietokannasta.
 
