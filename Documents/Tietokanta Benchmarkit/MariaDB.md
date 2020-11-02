@@ -65,18 +65,8 @@ chmod 755 ./populate-mariadb.sh ./createdb.sh
 ./populate-mariadb.sh
 ```
 
-# Mariadb Tietokannan Benchmarkkaus
-Käytetyn raudan tiedot:
+# Mariadb Tietokannan Benchmarkkaus Bullilla
 
-
-
-| OS          |   CPU       | System Memory |Storage | 
-| --------    | --------    | --------      |-------|
-|Lubuntu 64bit|A6-9225 2C+3G| 7486MiB       |Micron_1100_MTFD ATA Disk 256GB|
-
-
-
-Tietokantaan on populoitu 'Node_3200' ja rivejä yhteensä: 129,785,88
 
 Aloitetaan kirjautumalla dockerkontin sisälle:
 ```
@@ -100,30 +90,15 @@ Hae 5 ensimmäistä = ```SELECT * FROM SensorData LIMIT 5```
 
 ## Luku-nopeudet:
 
-### OMA RAUTA
-Suoritin 10 kertaa koko databasen haun: ```SELECT * FROM SensorData;```
+`SELECT * FROM SensorData WHERE Node_id=3200;`
 
 Tuloksiksi sain sekuntteina:
-20.071, 19.922, 19.914, 19.786, 19.907,
-19.877, 19.845, 19.811, 19.786, 19.937
-
-### BULL BLADE
-
-Tuloksiksi sain sekuntteina:
-11.718, 11.724, 11.746, 11.715, 11.696, 
-11.687, 11.692, 11.666, 11.710, 11.725
+151, 144, 122, 128, 118,  
+135, 124, 119, 122, 117
 
 ## Kirjoitus-nopeudet
 
-### OMA RAUTA
-
-10 kertaa suoritettu ```time ./populate-mariadb.sh```
-
-Tulokset sekuntteina:
-37.147, 34.714, 35.078, 34.781, 34.957,
-34.957, 35.015, 35.270, 35.882, 36.610
-
-### BULL BLADE
+**Populoitu siis node_3200.csv tietokantaan**
 
 Tulokset sekuntteina:
 80.089, 81.282, 79.223, 78.801, 78.504,
