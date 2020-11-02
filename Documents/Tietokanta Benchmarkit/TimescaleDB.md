@@ -117,18 +117,19 @@ df.head(10)
 
 ### Benchmark
 
-Väsäsin muutaman funktion, jolla benchmarkkaus saadaan tehtyä yhteyden avulla (olettaen, että Pythonilla tehdään muihinkin tietokantoihin kyselyt samalla tavalla, kuin TimescaleDB:seen.)
 
 Koodit löytyy [täältä](https://gitlab.dclabra.fi/ryhm-fox/projekti-2-team-fox/-/blob/Juha/benchmark.ipynb).
 
 Benchmarkkauksen sain tehtyä MariaDB:lle ja TimescaleDB:lle.
-CockroachDB ja YagabyteDB meiltä jäi vielä benchmarkkaamatta.
-Tarkistellaan tilannetta uudestaan, kun saadaan loput tietokannat benchmarkattua.
-
-InfluxDB:lle yritin myös tehdä, mutta se tietokanta tallentaa kyselyt jotenkin oudosti muistiin, jolloin ainakin omasta koneestani loppui muisti muutaman kyselyn jälkeen. Tämän kiertämiseksi on varmasti jokin keino, mutta en sitä muutaman tunnin aikana saanut korjattua. Muutamien kyselyjen perusteella InfluxDB oli kuitenkin huomattavasti hitaampi, kuin mitä MariaDB tai TimescaleDB.
+InfluxDB:lle yritin myös tehdä, mutta se tietokanta tallentaa kyselyt jotenkin oudosti muistiin, jolloin ainakin omasta koneestani loppui muisti muutaman kyselyn jälkeen. 
+Tämän kiertämiseksi on varmasti jokin keino, mutta en sitä muutaman tunnin aikana saanut korjattua. 
+Muutamien kyselyjen perusteella InfluxDB oli kuitenkin huomattavasti hitaampi, kuin mitä MariaDB tai TimescaleDB.
 InfluxDBllä datan vieminen tietokantaan kesti melkein 120min, kun TimescaleDBllä siihen meni aikaa 10min ja MariaDBllä reilu 30min. 
 
 InfluxDB tuskin ainakaan on meille siis kovin hyvä tietokanta?
+
+CockroachDB ja YagabyteDB meiltä jäi vielä benchmarkkaamatta.
+Tarkistellaan tilannetta uudestaan, kun saadaan loput tietokannat benchmarkattua.
 
 Tässä kuitenkin kuvaaja TimescalenDB:n ja MariaDB:n tuloksista.
 
