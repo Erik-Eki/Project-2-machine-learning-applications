@@ -137,21 +137,33 @@ Muutokset:
 Luodaan admin käyttäjä influxiin
 ```dockerfile=
 #COPY script that creates a user in influx
-COPY influx-commands/ .
+COPY setup/ .
 
-RUN chmod +x influx-commands.sh
+RUN chmod +x influx-setup.sh
 ```
 Voisi kuvitella, että tämän scriptin voisi runnata tässä, mutta ilmeisesti influx ei saa yhteyttä tässä vaiheessa porttiin 8086.
 
-influx-commands.sh sisältö:
+influx-setup.sh sisältö:
 ```bash=
+# Starting influxdb
+service influxdb start && \
+
+# Influxdb needs a second to boot up, so we take a nap
+sleep 5 && \
+
 # Creating an admin user for influx
-curl -XPOST "http://localhost:8086/query" --data-urlencode "q=CREATE USER admin WITH PASSWORD 'teamfox' WITH ALL PRIVILEGES"
-# Testing if the influx works
-curl -G http://localhost:8086/query -u admin:teamfox --data-urlencode "q=SHOW USERS"
+curl -XPOST "http://localhost:8086/query" --data-urlencode "q=CREATE USER admin WITH PASSWORD 'teamfox' WITH ALL PRIVILEGES" && \
+
+# Creating iiwari_org database
+curl -XPOST "http://localhost:8086/query" -u admin:teamfox --data-urlencode "q=CREATE DATABASE iiwari_org" && \
+
+# Testing if the influx works (Prints the databases)
+curl -G http://localhost:8086/query -u admin:teamfox --data-urlencode "q=SHOW DATABASES" && \
+
 # Iterating over folder and writing every file into the database
 for file in ./data/*; do
-	python3 csv-to-influxdb.py --user admin --password teamfox --dbname iiwari_org -m SensorData -tf "%Y-%m-%d %H:%M:%S.%f+00:00" --input "$file" --tagcolumns node_id --fieldcolumns x,y,z,q -b 200000
+        # [This whole command is dissected in here](https://github.com/fabio-miranda/csv-to-influxdb)
+        python3 csv-to-influxdb.py --user admin --password teamfox --dbname iiwari_org -m SensorData -tf "%Y-%m-%d %H:%M:%S.%f+00:00" --input "$file" --tagcolumns node_id --fieldcolumns x,y,z,q -b 200000
 done
 ```
 
@@ -176,18 +188,33 @@ RUN chmod +x populate.sh
 CMD ["bash", "populate.sh"]
 ```
 
+Tehdään image tämän Dockerfilen pohjalta:
+`docker build -t influx-master .`
+
+Image on n. 785MB kokoinen, joka on suhteellisen suuri, muttei naurettava.
+
 ## Kontin pystytys
-Linux:
+
+Tehdään kontti:
 
 `$ docker run -t -d --name influxDB -p 8086:8086 influxdb`
+
+- -d, --detach=false
+  - Ajaa kontin taustalla
+- -t, --tty=false
+  - > The -t and -i flags allocate a pseudo-tty and keep stdin open even if not attached. This will allow you to use the container like a traditional VM as long as the bash prompt is running.
 
 Kopioidaan data konttiin:
 
 `docker cp ./data/. influxDB:/data`
 
+Eli `docker cp {$lokaali kansio} influxDB:{$kontin kansio}`
+
 Ajetaan scripti, joka kirjoittaa kaiken data kansiossa InfluxDB:hen
 
 `docker exec -it influxDB /bin/bash influx-commands.sh`
+
+
 
 ---
 
