@@ -20,12 +20,165 @@ InfluxDB tarjoaa 2 käyttöympäristöä:
 - Terminaali
 
 # Docker
+## InfluxDB dockerilla
+Influxillekin on ihan oma image, mutta siihen on vaikeampi asentaa riippuvuuksia enkä saanut sitä toimimaan.
+
+Kuten mainittu edellisessä osiossa, ***Influxdb ei tue suoraan csv-tiedostosta kirjoittamista***, csv tiedosto pitää ensin muuttaa influxin line-protokollaan.
+
+Tietokannan populointiin käytän [**Fabio Mirandan csv-to-influx python scriptiä**](https://https://github.com/influxdata/influxdb-comparisons).
+Jos tietokanta populoitaisiin reaaliajassa, ei bulkkina, ei pythonia tarvitsisi tässä tilanteessa.
+
+Vaatimukset:
+- Python3
+- pip3
+    - Asennetaan python-paketit: ```requests, argparse, python-csv, datetime, pytz, influxdb```
+- Influxdb
+    - Vaatii ```gnupg2, curl```
+- nano (Tai mikä vain tekstieditori. Ihan vain jos haluaa kikkailla kontissa)
+
+## Dockerfilen luonti
+
+**FROM** hakee pohja imagen
+```dockerfile=
+# Set base image (host OS)
+FROM ubuntu:latest
+```
+
+Luodaan "työpöytä" **WORKDIR** komennolla
+```dockerfile=
+# Set the working directory in the container
+WORKDIR ./
+```
+Avataan portti 8086 **EXPOSE** komennolla
+```
+# Expose port 8086
+EXPOSE 8086
+```
+
+Muutetaan default shell bashiksi **SHELL** komennolla
+(Tämä siksi, koska jotkin komennot, kuten "source" ei toimi muuten)
+```
+# Establish default shell
+SHELL ["/bin/bash", "-c"] 
+```
+**RUN** komento on sama asia kuin ajaisi normaalin komennon terminaalissa
+
+RUN komennon **default shell** on **"/bin/sh"**, siksi se piti vaihtaa edellisessä kohdassa.
+
+**-y** tarkoittaa "assume yes", eli aina kun terminaalissa pitäisi painaa yes/no, painaa se automaattisesti "yes"
+```dockerfile=
+# Installing the main dependancies
+RUN apt-get update -y && apt-get upgrade -y
+
+RUN apt install nano -y && \
+	apt install -y gnupg2 curl -y && \
+	apt install python3 -y && \
+	apt install python3-pip -y
+```
+
+**COPY** komento kopioi kansion tai tiedoston local-koneelta konttiin
+```dockerfile=
+# Copy the content of the local src directory to the working directory
+# The database population python-script is in here.
+COPY csv-to-influx/ .
+```
+
+Näin voi asentaa **dependencyjä**, esim tässä tilanteessa *python paketteja*
+```dockerfile=
+# Copy the dependencies list to the working directory
+COPY requirements.txt .
+
+# Install dependencies used by the population python-script
+RUN pip3 install -r requirements.txt
+```
+requirements.txt näyttä yksinkertaiselta:
+```
+requests
+argparse
+python-csv
+datetime
+pytz
+influxdb
+```
+
+Asennetaan influxdb
+```dockerfile=
+# Setting up influxdb
+# Import GPG key
+RUN curl -sL https://repos.influxdata.com/influxdb.key | apt-key add -
+RUN source /etc/lsb-release
+# Add repo for Ubuntu 20.04
+RUN echo "deb https://repos.influxdata.com/ubuntu bionic stable" | tee /etc/apt/sources.list.d/influxdb.list
+RUN apt update -y
+RUN apt install -y influxdb
+```
+Influxin repon komento meinaa siis: ```RUN echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable"```
+
+Influxilla on configurointi tiedosto, johon pitää tehdä muutoksia.
+```dockerfile=
+# Replace default influx.conf with custom one
+RUN rm /etc/influxdb/influxdb.conf
+COPY influx-conf/ /etc/influxdb
+```
+Muutokset:
+```python=
+[http]
+# Determines whether HTTP endpoint is enabled.
+  enabled = true
+# Determines whether the Flux query endpoint is enabled.
+  flux-enabled = true
+# Determines whether the Flux query logging is enabled.
+# The bind address used by the HTTP service.
+  bind-address = ":8088"
+# Determines whether user authentication is enabled over HTTP/HTTPS.
+  auth-enabled = true
+```
+
+Influxdb pitää käynnistää
+```dockerfile=
+# Start influx service
+RUN service influxdb start
+```
+
+Luodaan admin käyttäjä influxiin
+```dockerfile=
+# Creating an admin user for influx
+RUN curl -XPOST "http://localhost:8086/query" --data-urlencode "q=CREATE USER admin WITH PASSWORD 'teamfox' WITH ALL PRIVILEGES"
+# Testing if the influx works
+RUN curl -G http://localhost:8086/query -u admin:teamfox --data-urlencode "q=SHOW USERS"
+```
+
+Kopioidaan tietokantaa puskettava data locaalista kansiosta
+```dockerfile=
+# Copy the sensordata into the container
+#COPY data .
+```
+
+Kopioidaan populointi scripti
+```dockerfile=
+# Copy the database population script into container
+COPY populate-script/ .
+
+# Making the txt.file an executable with chmod and running it
+RUN chmod +x populate.sh
+```
+Populointi scripti käy data kansion läpi, jossa on .csv tiedostot.
+```bash=
+for file in ./data/*; do
+	python3 csv-to-influxdb.py --user admin --password teamfox --dbname iiwari_org -m SensorData -tf "%Y-%m-%d %H:%M:%S.%f+00:00" --input "$file" --tagcolumns node_id --fieldcolumns x,y,z,q -b 200000
+done
+```
+
+**CMD** komentoa ei suoriteta build-vaiheessa vaan ***kontin luomisen jälkeen*** ja vain yksi CMD-komento sallitaan (jos on enemmän, vain viimeinen ajetaan)
+```dockerfile=
+# Run the population script
+CMD ["bash", "populate.sh"]
+```
 
 ## Kontin pystytys
-
 Linux:
 
-`$ docker run -p 8086:8086 -v $PWD:/var/lib/influxdb influxdb`
+`$ docker run -t -d --name influxDB -p 8086:8086 influxdb`
 
 CLI/SHELL:
 ```
@@ -35,17 +188,16 @@ docker exec -it influxdb influx
 
 `PS> docker run -p 8086:8086 -v ${PWD}:\GitHub\Erik\projekti-2-team-fox\Tietokannat\InfluxDB influxdb`
 
-Se miten itse loin Windows 10:llä:
-
+Esimerkki:
 `docker run --name influxdb -p 8086:8086 -v D:\GitHub\Erik\projekti-2-team-fox\Tietokannat\InfluxDB:/var/lib/influxdb influxdb -config /var/lib/influxdb/influxdb.conf`
-- Ensin on tuo polku minne tallennan tietokanna omalla koneella
-- Erotettu : on influDB:n polku, mikä on sidottu kiinni oman koneeni polkuun.
-- -config käynnistää ottamalla config-tiedoston huomioon (joka vaaditaan jos tahtoo käynnistää adminina)
+- Ensin mountataan **-v** tuo polku minne tallennan tietokanna omalla koneella
+- **:** on erotettu influDB:n polku, mikä on sidottu kiinni oman koneeni polkuun.
+- **-config** käynnistää ottamalla config-tiedoston huomioon (joka vaaditaan jos tahtoo käynnistää adminina)
 
 <dl>
   <dt>InfluxDB käyttää portteja</dt>
   <dd>8086 HTTP API portti</dd>
-  <dd>2003 Graphite support (jos on päällä)</dd>
+  <dd>8088 Influxin Backup ja Restore</dd>
 </dl>
 
 HTTP API portti avautuu automaattisesti docker run -P kommennon suoritettua.
@@ -57,7 +209,7 @@ HTTP API portti avautuu automaattisesti docker run -P kommennon suoritettua.
 
 ---
 
-# InfluxDB
+# InfluxDB perusteet
 ## InfluxDB:n toiminta
 
 InfluxDB on hieman erilainen muihin tietokantoihin verrattuna:
@@ -112,7 +264,7 @@ Tee csv tiedosto taulukosta root-kansioon:
 
 `influx -username admin -password teamfox -database iiwari_org -execute "SELECT * FROM sensordata" -format csv > test.csv`
 
-## Populointi
+# Python
 
 [Tutoriaali csv tiedoston lukemisen Influxiin:](https://medium.com/@dganais/getting-started-writing-data-to-influxdb-54ce99fdeb3e)
 
@@ -120,7 +272,7 @@ Valitettavasti, InfluxDB ei tue suoraan csv.tiedoston lukemista tietokantaa, vaa
 
 Tehdään tämä Pythonilla:
 
-### Alustus
+## Alustus
 Otetaan csv-tiedosto käyttöön:
 ```python=
 import pandas as pd
@@ -142,7 +294,7 @@ df
 ```
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_3dc5744004b76d16500f6230eef61d75.png)
 
-### Formatointi tekstitiedostoon
+## Formatointi tekstitiedostoon
 Ja näin se pitää formatoida tekstitiedostoon (Huom, "q" kolumnia ei otettu mukaan):
 ```python=
 lines = [str(df["measurement"][d]) 
@@ -163,7 +315,7 @@ sensordata timestamp="2007-03-19 11:46:21",x=0,y=0,z=0,node_id=3200
 sensordata timestamp="2007-03-19 11:46:22",x=0,y=0,z=0,node_id=3200
 ```
 
-### Populointi monella tiedostolla
+## Populointi monella tiedostolla
 
 Yhdistetään kaikki csv tiedostot yhdeksi
 ```python=
@@ -233,7 +385,7 @@ CREATE DATABASE iiwari_org
 - **DDL** luo autogeenitietokannan nimeltä "*iiwari_org*". 
 - **DML** määrittää, mitä tietokantaa käytetään, jos olet jo luonut tietokannan.
 
-### Tietokannan populointi tekstitiedostosta
+## Tietokannan populointi tekstitiedostosta
 Tällä loitsulla sitten populoidaan tietokanta:
 
 ```influx -import -path=/var/lib/influxdb/import.txt -precision=ns -username admin -password teamfox```
@@ -245,6 +397,7 @@ Käsittelyn jälkeen, lopussa tulostuu näin:
 Voidaan tarkistaa miten populointi onnistui:
 
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_b269e41fe07aa86147735b52afd63d19.png)
+
 
 ## Tietokannasta lukeminen Pythonilla
 
