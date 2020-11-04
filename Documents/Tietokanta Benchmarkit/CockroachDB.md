@@ -41,3 +41,5 @@ done
 - Luo iiwari databasen, johon taulun missä yllä olevat attribuutit'
 
 - Benchmarkkaukseen en vielä kerennyt ja siihen perehdyn tulevina päivinä.
+
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_1f0bb1c7f0d7d30b9268c24a4d5bb5b1.png)
