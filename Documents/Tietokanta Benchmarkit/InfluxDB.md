@@ -142,6 +142,16 @@ RUN service influxdb start
 
 Luodaan admin käyttäjä influxiin
 ```dockerfile=
+#COPY script that creates a user in influx
+COPY influx-commands/ .
+
+RUN chmod +x influx-commands.sh
+RUN bash influx-commands.sh
+```
+Voisi kuvitella, että saman voisi tehdä näin, mutta ilmeisesti influx ei jostain syystä saa yhteyttä tässä vaiheessa porttiin 8086.
+
+Mutta nämä komennot ovat kuitenkin tuossa influx-command.sh tiedostossa
+```dockerfile=
 # Creating an admin user for influx
 RUN curl -XPOST "http://localhost:8086/query" --data-urlencode "q=CREATE USER admin WITH PASSWORD 'teamfox' WITH ALL PRIVILEGES"
 # Testing if the influx works
