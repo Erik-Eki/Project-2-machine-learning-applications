@@ -1,0 +1,6 @@
+requests
+argparse
+python-csv
+datetime
+pytz
+influxdb
