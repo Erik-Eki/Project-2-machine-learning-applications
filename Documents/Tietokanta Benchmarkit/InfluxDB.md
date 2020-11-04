@@ -212,7 +212,7 @@ Eli `docker cp {$lokaali kansio} influxDB:{$kontin kansio}`
 
 Ajetaan scripti, joka kirjoittaa kaiken data kansiossa InfluxDB:hen
 
-`docker exec -it influxDB /bin/bash influx-commands.sh`
+`docker exec -it influxDB /bin/bash influx-setup.sh`
 
 
 
