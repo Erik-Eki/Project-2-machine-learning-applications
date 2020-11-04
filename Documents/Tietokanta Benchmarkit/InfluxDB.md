@@ -236,7 +236,7 @@ Mene sisälle tietokantaan adminina:
 
 Nyt, kun menee selaimeen ja menee osoitteeseen http://localhost:8086/query?q=show databases, nähdään tietokanta.
 
-### Tietokantaa lisääminen
+## Tietokantaa lisääminen
 
 `CREATE DATABASE <tietokanta>`
 
@@ -272,7 +272,7 @@ Valitettavasti, InfluxDB ei tue suoraan csv.tiedoston lukemista tietokantaa, vaa
 
 Tehdään tämä Pythonilla:
 
-## Alustus
+### Alustus
 Otetaan csv-tiedosto käyttöön:
 ```python=
 import pandas as pd
@@ -385,7 +385,7 @@ CREATE DATABASE iiwari_org
 - **DDL** luo autogeenitietokannan nimeltä "*iiwari_org*". 
 - **DML** määrittää, mitä tietokantaa käytetään, jos olet jo luonut tietokannan.
 
-## Tietokannan populointi tekstitiedostosta
+## Populointi tekstitiedostosta
 Tällä loitsulla sitten populoidaan tietokanta:
 
 ```influx -import -path=/var/lib/influxdb/import.txt -precision=ns -username admin -password teamfox```
@@ -399,7 +399,7 @@ Voidaan tarkistaa miten populointi onnistui:
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_b269e41fe07aa86147735b52afd63d19.png)
 
 
-## Tietokannasta lukeminen Pythonilla
+## Lukeminen pythonilla
 
 Näin datan voi lukea localhostilla:
 
