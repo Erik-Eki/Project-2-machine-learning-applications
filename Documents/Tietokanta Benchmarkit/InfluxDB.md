@@ -134,31 +134,28 @@ Muutokset:
   auth-enabled = true
 ```
 
-Influxdb pitää käynnistää
-```dockerfile=
-# Start influx service
-RUN service influxdb start
-```
-
 Luodaan admin käyttäjä influxiin
 ```dockerfile=
 #COPY script that creates a user in influx
 COPY influx-commands/ .
 
 RUN chmod +x influx-commands.sh
-RUN bash influx-commands.sh
 ```
-Voisi kuvitella, että saman voisi tehdä näin, mutta ilmeisesti influx ei jostain syystä saa yhteyttä tässä vaiheessa porttiin 8086.
+Voisi kuvitella, että tämän scriptin voisi runnata tässä, mutta ilmeisesti influx ei saa yhteyttä tässä vaiheessa porttiin 8086.
 
-Mutta nämä komennot ovat kuitenkin tuossa influx-command.sh tiedostossa
-```dockerfile=
+influx-commands.sh sisältö:
+```bash=
 # Creating an admin user for influx
-RUN curl -XPOST "http://localhost:8086/query" --data-urlencode "q=CREATE USER admin WITH PASSWORD 'teamfox' WITH ALL PRIVILEGES"
+curl -XPOST "http://localhost:8086/query" --data-urlencode "q=CREATE USER admin WITH PASSWORD 'teamfox' WITH ALL PRIVILEGES"
 # Testing if the influx works
-RUN curl -G http://localhost:8086/query -u admin:teamfox --data-urlencode "q=SHOW USERS"
+curl -G http://localhost:8086/query -u admin:teamfox --data-urlencode "q=SHOW USERS"
+# Iterating over folder and writing every file into the database
+for file in ./data/*; do
+	python3 csv-to-influxdb.py --user admin --password teamfox --dbname iiwari_org -m SensorData -tf "%Y-%m-%d %H:%M:%S.%f+00:00" --input "$file" --tagcolumns node_id --fieldcolumns x,y,z,q -b 200000
+done
 ```
 
-Kopioidaan tietokantaa puskettava data locaalista kansiosta
+Kopioidaan tietokantaa puskettava data locaalista kansiosta (Imagen koko kasvaa, joten tätä ei kannata ehkä tehdä)
 ```dockerfile=
 # Copy the sensordata into the container
 #COPY data .
@@ -172,12 +169,6 @@ COPY populate-script/ .
 # Making the txt.file an executable with chmod and running it
 RUN chmod +x populate.sh
 ```
-Populointi scripti käy data kansion läpi, jossa on .csv tiedostot.
-```bash=
-for file in ./data/*; do
-	python3 csv-to-influxdb.py --user admin --password teamfox --dbname iiwari_org -m SensorData -tf "%Y-%m-%d %H:%M:%S.%f+00:00" --input "$file" --tagcolumns node_id --fieldcolumns x,y,z,q -b 200000
-done
-```
 
 **CMD** komentoa ei suoriteta build-vaiheessa vaan ***kontin luomisen jälkeen*** ja vain yksi CMD-komento sallitaan (jos on enemmän, vain viimeinen ajetaan)
 ```dockerfile=
@@ -190,15 +181,17 @@ Linux:
 
 `$ docker run -t -d --name influxDB -p 8086:8086 influxdb`
 
-CLI/SHELL:
-```
-docker run --name=influxdb -d -p 8086:8086 influxdb
-docker exec -it influxdb influx
-```
+Kopioidaan data konttiin:
 
-`PS> docker run -p 8086:8086 -v ${PWD}:\GitHub\Erik\projekti-2-team-fox\Tietokannat\InfluxDB influxdb`
+`docker cp ./data/. influxDB:/data`
 
-Esimerkki:
+Ajetaan scripti, joka kirjoittaa kaiken data kansiossa InfluxDB:hen
+
+`docker exec -it influxDB /bin/bash influx-commands.sh`
+
+---
+
+Vähän tarkennusta:
 `docker run --name influxdb -p 8086:8086 -v D:\GitHub\Erik\projekti-2-team-fox\Tietokannat\InfluxDB:/var/lib/influxdb influxdb -config /var/lib/influxdb/influxdb.conf`
 - Ensin mountataan **-v** tuo polku minne tallennan tietokanna omalla koneella
 - **:** on erotettu influDB:n polku, mikä on sidottu kiinni oman koneeni polkuun.
