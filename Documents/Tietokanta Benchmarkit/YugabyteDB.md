@@ -53,6 +53,10 @@ Seuraavaksi tehdään populate-yugabytedb.sh, db_yugabyte.sql, initdbyugabyte.sq
         q INTEGER NOT NULL);
 
 
+###### createyugabyte
 
+    #!/usr/bin/env bash
+    #cd /var/lib/mysql/iiwari_org 
+    docker exec -i yugabytedb-fox /home/yugabyte/bin/ysqlsh         --echo-queries < initdbyugabyte.sql
 
 
