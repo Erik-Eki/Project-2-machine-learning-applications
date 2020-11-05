@@ -19,7 +19,8 @@ docker volume create mun-oma-data # aja vain kerran
 
 #### Tietokannan luonti
 
-Asennetaan yugabyte kirjoittamalla komento: docker pull yugabytedb/yugabyte
+Asennetaan yugabyte kirjoittamalla komento: 
+    docker pull yugabytedb/yugabyte
 Seuraavaksi tehdään paikallinen klusteri komennolla: 
     docker run -d --name yugabytedb-fox  -p7000:7000 -p9000:9000 -p5433:5433 -p9042:9042\ --network mun-oma-verkko\
     -v ~/yb_data:/home/yugabyte/var\
