@@ -39,7 +39,7 @@ Seuraavaksi tehdään populate-yugabytedb.sh, initdbyugabyte.sql sekä createyug
         echo Working on $f
         sudo docker cp $f yugabytedb-fox:/var/SensorData.csv
         docker exec -it yugabytedb-fox /home/yugabyte/bin/ysqlsh --echo-queries -d iiwari_org -c "\COPY SensorData FROM '/var/SensorData.csv' WITH     (FORMAT, CSV, HEADER)"
-        docker exec -it yugabytedb-fox /home/yugabyte/bin/ysqlsh
+        docker exec -i yugabytedb-fox rm/var/SensorData.csv
     done
 
 ###### initdb-yugabyte
