@@ -11,7 +11,8 @@ Ladataan tiedostot serveriltä koneelle.
 
 #### Luodaan oma verkko dockeriin missä voidaan käyttää jupyteria
 
-docker volume create mun-oma-data # aja vain kerran
+    docker network create mun-oma-verkko --attachable
+    docker volume create mun-oma-data # aja vain kerran
 
 ###### käynnistä jupyter notebook omalla koneella http://localhost:8888
 
@@ -27,7 +28,7 @@ Seuraavaksi tehdään paikallinen klusteri komennolla:
     yugabytedb/yugabyte:latest bin/yugabyted start\
     --daemon=false 
 
-Seuraavaksi tehdään populate-yugabytedb.sh, db_yugabyte.sql, initdbyugabyte.sql sekä createyugabyte.sh tiedostot joiden sisään laitetaan seuraavat komennot.
+Seuraavaksi tehdään populate-yugabytedb.sh, initdbyugabyte.sql sekä createyugabyte.sh tiedostot joiden sisään laitetaan seuraavat komennot.
 
 
 ###### populate-yugabytedb.sh
@@ -58,5 +59,22 @@ Seuraavaksi tehdään populate-yugabytedb.sh, db_yugabyte.sql, initdbyugabyte.sq
     #!/usr/bin/env bash
     #cd /var/lib/mysql/iiwari_org 
     docker exec -i yugabytedb-fox /home/yugabyte/bin/ysqlsh         --echo-queries < initdbyugabyte.sql
+
+###### Databasen käynnistys
+
+Kun edelliset tiedostot on luotu voidaan database käynnistää komennolla
+    docker run -d --name yugabytedb-fox  -p7000:7000 -p9000:9000 -p5433:5433 -p9042:9042\
+    --network mun-oma-verkko\
+    -v ~/yb_data:/home/yugabyte/var\
+    yugabytedb/yugabyte:latest bin/yugabyted start\
+     --daemon=false
+
+Tämän jälkeen kirjoitetaan 
+    chmod 755 ./createyugabytedb ./populate-yugabytedb
+    ./createyugabytedb
+    ./populate-yugabytedb
+ 
+ Populoinnin pitäisi olla nytten käynnissä.
+
 
 
