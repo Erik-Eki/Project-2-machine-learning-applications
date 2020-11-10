@@ -28,23 +28,30 @@ def find_outliers(df):
     print(f"{'-'*30}\nNumber of nodes: {amount_nodes}")
 
     # Only use the x and y columns
-    df = df[["x","y"]]
+    df1 = df[["x","y"]]
 
-
+    z_scores = zscore(df1)
+    abs_z_scores = np.abs(z_scores)
     # Remove rows that have outliers in at least one column
-    df_clean = df[(np.abs(zscore(df)) <= 2.5).all(axis=1)]
+    outliers = df1[(abs_z_scores <= 2.8).all(axis=1)]
     # Pidä vain ne rivit, jotka ovat +3 - -3 keskihajonnan sisällä.
+    
+
+    
+    filtered_entries = (abs_z_scores <= 2.8).all(axis=1)
+    df_clean = df[filtered_entries]
+    
 
     # pd.concat lisää kaksi DataFrame-kehystä yhteen liittämällä ne peräkkäin.
     # jos on päällekkäisyyksiä, se kaapataan drop_duplicates:illa
     # drop_duplicates oletusarvoisesti jättää ensimmäisen havainnon ja poistaa kaikki muut havainnot.
     # Tässä tapauksessa haluamme, että jokainen kaksoiskappale poistetaan. Siksi keep = False -parametri
-    potato = pd.concat([df, df_clean, df_clean]).drop_duplicates(keep=False)
+    potato = pd.concat([df1, outliers]).drop_duplicates(keep=False)
 
     print(f"{'-'*30}\nOutliers\n")
     print("Data with outliers: ", len(df))
-    print("Ouliers removed:    ", len(df) - len(potato))
-    print("Amount of outliers: ",  len(potato))
+    print("Ouliers removed:    ", len(df) - len(df_clean))
+    print("Data without outliers: ", len(df_clean))
 
 
     import matplotlib.pyplot as plt
@@ -54,6 +61,7 @@ def find_outliers(df):
     plt.savefig("outliers-in-data.png")
     plt.show
 
+    return df_clean
 
 # Esim: draw_histogram(df2['x'], df2['y'], 20)
 def draw_histogram(x, y, bin_num):
