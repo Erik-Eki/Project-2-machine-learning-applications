@@ -1,6 +1,7 @@
+import pandas as pd
+import mysql.connector
+
 def database_query(sql_query):
-    import pandas as pd
-    import mysql.connector
 
     mydb = mysql.connector.connect(
       host="172.28.200.50",
