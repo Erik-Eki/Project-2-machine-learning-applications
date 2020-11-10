@@ -49,8 +49,7 @@ Yugabyte suoriutui selvästi muita hitaammin kaikissa testeissä, joten se pää
  
 Seuraavissa kuvaajissa voidaan tarkastella lähemmin kolmen nopeimman tietokannan tuloksia.
 
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_3f8a369b322fcda575baae7b3fffc0ca.png)
-
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_7ff0a97a459196141e85f0417d2b7ee5.png)
 
 Suoritetaan vielä kaksi testiä, joissa data haetaan timestamp:n ja node_id:n perusteella, koska näitä kyselyjä oletettavasti tulemme eniten tietokantaan tekemään.
 
