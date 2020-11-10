@@ -5,19 +5,20 @@ Valtteri Alastalo, Kosti Kaaresvirta, Erik Huuskonen, Lauri Pellinen ja Juha Var
 
 Testattavat tietokannat ovat YugabyteDB, CockhroachDB, TimescaleDB, MariaDB ja InfluxDB.
 Ohjeet jokaisen tietokannan pystyttämiseen ja populoimiseen löytyy [täältä.](https://gitlab.dclabra.fi/ryhm-fox/projekti-2-team-fox/-/tree/master/Documents/Tietokanta%20Benchmarkit)
+
 Testin koodit löytyvät [täältä](https://gitlab.dclabra.fi/ryhm-fox/projekti-2-team-fox/-/tree/Juha/Benchmark).
 
 #### Hakunopeus
 Ensimmäisellä testillä mitataan, kuinka nopeasti tietokannasta saadaan haettua 1,400,000 riviä dataa yksinkertaisella kyselyllä, sekä kuinka nopeasti tästä datasta saadaan muodostettua Pandas dataframe. 
 
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_aed83574fa9d96fb8a8f652c714ae283.png)
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_3beb25986f50dfe07b375c1e0c65ba15.png)
 
 MariaDB:llä saadaan selvästi nopeiten haettua data, sekä muodostettua dataframe.
 Yugabyte:n ja InfluxDB: kyselyt kestivät huomattavasti kauemmin muihin verrattuna. InfluxDB:llä haetusta datasta saadaan kuitenkin muodostettua dataframe lähes yhtä nopeasti, kuin MariaDB:llä.
 
 Toinen testi mittaa hakunopeutta hieman monimutkaisemmalla kyselyllä.
 
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_120b244b06248e5af1657dc91c11916b.png)
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_58541d87a6738b41ba67852925987f25.png)
 
 MariaDB suoriutuu tässäkin kyselyssä muita nopeammin.
 Yugabyte on selvästi muita hitaampi. 
@@ -26,7 +27,7 @@ InfluxDB tekee kyselyn nopeammin, kun siihen on asetettu joitan ehtoja verrattun
 #### Kirjoitusnopeus
 Kolmas testi mittaa tietokannan kirjoitusnopeutta.
 
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_5c9b5d3df8b4c0a98b3e930d4db93311.png)
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_ffae00312a38a06f31190ea12689405a.png)
 
 CochroachDB:llä tietokantaan saadaan siirrettyä dataa selvästi muita nopeammin(26s).
 TimescaleDB:llä aikaa kuluu noin tuplasti Cockhroachiin verrattuna (58s).
@@ -34,7 +35,7 @@ TimescaleDB:llä aikaa kuluu noin tuplasti Cockhroachiin verrattuna (58s).
 #### Skaalautuvuus
 Neljännessä testissä mitataan, kuinka kyselyyn kulunut aika kasvaa suhteessa haettavan datan määrään. Tietokantaan tehdään kahdeksan kyselyä. Joka kierroksella kyselyä kasvatetaan 1,000,000 rivillä.
 
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_3befe300dccfb01beb02df4c25076a92.png)
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_3fce4b0ddc912de2a2d0b1eae2b17fb1.png)
 
 *x-akseli alkaa virheellisesti nollasta.*
 
@@ -48,7 +49,7 @@ Yugabyte suoriutui selvästi muita hitaammin kaikissa testeissä, joten se pää
  
 Seuraavissa kuvaajissa voidaan tarkastella lähemmin kolmen nopeimman tietokannan tuloksia.
 
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_7956b2e54c4923cf39aabede24bece6c.png)
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_3f8a369b322fcda575baae7b3fffc0ca.png)
 
 
 Suoritetaan vielä kaksi testiä, joissa data haetaan timestamp:n ja node_id:n perusteella, koska näitä kyselyjä oletettavasti tulemme eniten tietokantaan tekemään.
