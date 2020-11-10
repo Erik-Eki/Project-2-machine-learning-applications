@@ -1,5 +1,6 @@
+import pandas as pd
+
 def xy_to_grid(df,x,y,k):
-    import pandas as pd
     
     x_cut = pd.cut(df.x, k,labels=False)
     y_cut = pd.cut(df.y, k,labels=False)

@@ -3,7 +3,7 @@ import seaborn as sns
 from scipy.stats import norm
 from scipy.stats import zscore
 import numpy as np
-
+import pandas as pd
 
 def find_outliers(df):
     # Check for missing values

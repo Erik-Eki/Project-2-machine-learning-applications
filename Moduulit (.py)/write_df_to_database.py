@@ -1,6 +1,9 @@
+import pandas as pd
+from sqlalchemy import create_engine
+
 # dataframen columnit = node_id timestamp x y
 def write_df_to_mariadb(df):
-    import pandas as pd
+    
 
         #Timestamp muodossa 2020-06-01 06:00:10.968
         #df['timestamp'] = df['timestamp'].astype(str)
@@ -23,7 +26,6 @@ def write_df_to_mariadb(df):
     mycursor.execute("CREATE TABLE CleanSensorData (node_id INTEGER NOT NULL,timestamp TEXT,x INTEGER NOT NULL,y INTEGER NOT NULL,xy_grid DOUBLE NOT NULL);");
 
     # mysql engine init
-    from sqlalchemy import create_engine
     engine = create_engine('mysql+mysqlconnector://root:insert-password-here@172.28.200.50/iiwari_org')
 
     # Kirjoitetaan osissa koko dataframe koska tulee muuten yhteyden aikakatkaisu
