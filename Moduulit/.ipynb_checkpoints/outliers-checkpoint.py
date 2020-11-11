@@ -32,13 +32,12 @@ def find_outliers(df):
 
     z_scores = zscore(df1)
     abs_z_scores = np.abs(z_scores)
+    
     # Remove rows that have outliers in at least one column
-    outliers = df1[(abs_z_scores <= 2.8).all(axis=1)]
+    outliers = df1[(abs_z_scores <= 2.5).all(axis=1)]
+    
     # Pidä vain ne rivit, jotka ovat +3 - -3 keskihajonnan sisällä.
-    
-
-    
-    filtered_entries = (abs_z_scores <= 2.8).all(axis=1)
+    filtered_entries = (abs_z_scores <= 2.5).all(axis=1)
     df_clean = df[filtered_entries]
     
 
@@ -51,11 +50,11 @@ def find_outliers(df):
     print(f"{'-'*30}\nOutliers\n")
     print("Data with outliers: ", len(df))
     print("Ouliers removed:    ", len(df) - len(df_clean))
-    print("Data without outliers: ", len(df_clean))
+    print("Data after: ", len(df_clean))
 
 
     import matplotlib.pyplot as plt
-
+    plt.gca().invert_yaxis()
     plt.plot(df_clean["x"], df_clean["y"], color="red", marker='o', linestyle='dashed', linewidth=0.2, markersize=3)
     plt.plot(potato["x"], potato["y"], color="blue", marker='x', linestyle='dashed', linewidth=0.2, markersize=3)
     plt.savefig("outliers-in-data.png")
