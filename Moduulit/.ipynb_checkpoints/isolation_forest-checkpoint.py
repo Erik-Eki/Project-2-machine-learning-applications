@@ -7,7 +7,7 @@ from sklearn.ensemble import IsolationForest
 def isolation_forest(df, max_samples, random_state, contamination):
     
     # Testing for samples
-    df = df.reset_index(drop=True)
+    #df = df.reset_index(drop=True)
     
     rs = np.random.RandomState(random_state)
     # x ja y arvot talteen
