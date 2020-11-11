@@ -23,4 +23,8 @@ def xy_to_grid(df,x,y,k):
     
     # Poistetaan vanhat x_grid ja y_grid sekä z ja q
     df = df.drop(columns=['x_grid','y_grid'])
+    
+    # reset index
+    df = df.reset_index(drop=True)
+    
     return df
