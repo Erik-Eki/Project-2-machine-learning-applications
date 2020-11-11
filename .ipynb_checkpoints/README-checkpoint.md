@@ -1,5 +1,3 @@
-[Jupyterlab & Docker](https://gitlab.dclabra.fi/wiki/33vwBmWwRBKKLKh8d3T6iQ?view)
-
 # Projekti 2 - Team Fox
 
 [Projektin moodle](https://devmoodle.kamit.fi/course/view.php?id=3348)
