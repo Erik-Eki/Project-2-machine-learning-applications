@@ -22,7 +22,7 @@ def xy_to_grid(df,x,y,k):
     df['xy_grid'] = pd.factorize(df['xy_grid'])[0] + 1
     
     # Poistetaan vanhat x_grid ja y_grid sekä z ja q
-    df = df.drop(columns=['x_grid','y_grid'])
+    #df = df.drop(columns=['x_grid','y_grid'])
     
     # reset index
     df = df.reset_index(drop=True)
