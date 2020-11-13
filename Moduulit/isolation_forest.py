@@ -4,14 +4,11 @@ import matplotlib.pyplot as plt
 from sklearn import preprocessing
 from sklearn.ensemble import IsolationForest
 
-def isolation_forest(df, max_samples, random_state, contamination):
+
+def isolation_forest(df, random_state, contamination, node):
     
-    # Testing for samples
-    #df = df.reset_index(drop=True)
-    
-    rs = np.random.RandomState(random_state)
     # x ja y arvot talteen
-    x_temp = df[['x','y']].values.copy()
+    x_temp = df.loc[df['node_id']==node][['x', 'y']]
     
     # Init minmaxscaler + fit+transform
     min_max_scaler = preprocessing.MinMaxScaler()
@@ -20,10 +17,9 @@ def isolation_forest(df, max_samples, random_state, contamination):
     # Normalisoidut arvot uuteen dataframeen
     xy_normalized = pd.DataFrame(x_scaled)
     xy_normalized = xy_normalized.rename(columns={0: 'x', 1: 'y'})
-    
-    
+      
     # Isolationforest annetuin parametrein + fit
-    clf = IsolationForest(max_samples=max_samples,random_state=rs, contamination=contamination) 
+    clf = IsolationForest(max_samples=len(x_scaled),random_state=random_state, contamination=contamination) 
     clf.fit(xy_normalized)
     
     # Outlier detect
@@ -35,15 +31,15 @@ def isolation_forest(df, max_samples, random_state, contamination):
     print('Dataframe lenght before:', len(df))
     
     # Drop outliers from df + reset index
-    df = df.drop(index=if_anomalies.index.values)
+    df = df.drop(df.index[if_anomalies.index.values])
     df = df.reset_index(drop=True)
     
     print('Dataframe lenght after:', len(df))
-    print('Total outliers:', len(if_anomalies))
+    print('Total outliers detected:', len(if_anomalies))
     
-    # Plot result
-    plt.gca().invert_yaxis()
-    plt.scatter(df['x'],df['y'],edgecolor='black')
-    plt.show()
+    # Plot results
+    #plt.gca().invert_yaxis()
+    #plt.scatter(df['x'],df['y'],edgecolor='black')
+    #plt.show()
     
     return df
