@@ -3,7 +3,8 @@ import math
 
 def xy_to_grid(df,x,y,k):
     
-
+    df = df.reset_index(drop=True)
+    
     xmin, ymin = df.x.min(), df.y.min()
     xmax, ymax = df.x.max(), df.y.max()
     gridlista_x, gridlista_y = [], []
