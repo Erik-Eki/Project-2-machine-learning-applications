@@ -116,7 +116,6 @@ y std:  1056.1131432857248
     - Käyrän hännässä on muutamia pisteitä **oikealla**
     - Käyrän huippu on **n. 700** kohdalla
 
-Eli outliereita ei pitäisi olla kovinkaan paljon, olisiko parisataa.
 Katsotaanpas seuraavassa osiossa tämä numeerisesti.
 
 ---
