@@ -1,7 +1,7 @@
 Datan Siivous - Z-score Outlierit
 =
 
-**(Huom. Esimerkeissä testaus tehty vain 100 000 data pisteellä.**)
+**(Huom. Esimerkeissä testaus tehty 1 000 000 datapisteellä.**)
 
 
 Meillä on monta eri tapaa mietitty, että miten poistaa outliereita.
@@ -98,10 +98,17 @@ def draw_histogram(x, y, bin_num):
     - x:n tiheyskäyrä on punaisella
 - y arvot ovat sinisellä
     - y:n tiheyskäyrä on tummansinisellä
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_e944d784cbc4b35b0122e327763425be.jpg)
 
-Kuvasta voidaan päätellä, että:
+```
+x mean:  2007.42516
+y mean:  524.458634
+x std:  880.5673627763946
+y std:  1056.1131432857248
+```
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_d09f76e2cef8261de56edb39a91e3463.png)
 
+
+**Kuvasta voidaan päätellä, että:**
 - X:llä **eniten arvoja** löytyy 1000-2000 ja juuri alle 3000 kohdilta
     - Käyrän hännässä on muutamia pisteitä **vasemmalla**
     - Käyrän huippu on **2000** kohdalla
@@ -141,7 +148,7 @@ def find_outliers(df):
     print(f"{'-'*30}\nNumber of nodes: {amount_nodes}")
 ```
 Ulostulo näyttää tältä:
-```python=
+```
 Number of missing variables in table
  node_id      0
 timestamp    0
@@ -153,8 +160,8 @@ dtype: int64
 ------------------------------
 Unique values in columns
 
-uniques in x 4041
-uniques in y 4035
+uniques in x 5161
+uniques in y 5033
 uniques in z 1
 uniques in q 1
 ------------------------------
@@ -163,7 +170,7 @@ Checking z and q columns
 uniques in z [100]
 uniques in q [0]
 ------------------------------
-Number of nodes: 1
+Number of nodes: 3
 ```
 
 ### Z-score
@@ -205,11 +212,12 @@ Joten: Nyt lasketaan itse se z-score datalle:
 ```
 Ulostulo:
 ```
+------------------------------
 Outliers
 
-Data with outliers:  100000
-Ouliers removed:     173
-Data after:  99827
+Data with outliers:  1000000
+Ouliers removed:     6483
+Data after:  993517
 ```
 Kuten aavistelin viime histogrammin kohdalla, outliereita ei pitäisi olla kuin parisataa ja kuten näkyy: 173 outliereita löydetty.
 
@@ -227,10 +235,21 @@ Piirretään kuva poistetuista pisteistä:
 ```
 ### Kuvaaja
 Punaisella jääneet pisteet, sinisellä poistetut
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_7bfd1f986a7ec930197e88fa1851d393.png)
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_a695065de04724b4dd2498967c8e0a76.png)
+
 
 ***(Huom. kuvaaja on todennäköisesti väärinpäin, mutta ilman pohjapiirustusta ei voi olla täysin varma)***
 
 Kuvaajasta voidaan päätellä, että selvästi keskittymän ulkopuolella olevat pisteet on poistettu, kuten myös aika suoralta reunalta.
 
 Tästä voidaan päätellä tuossa suoralla kohdalla olevan seinä.
+
+# Konluusio
+
+'z' ja 'q' kolumnit ovat siis aika turhia datassa, "korkeus" ei muutu kuin suurilla hypyillä ja "signaalin laatu" ei vaihdu ollenkaan.
+
+Myöskään outliereita ei löydy z-score tekniikalla paljoa, eli tämä voisi olla vaikka se ***ensimmäinen läpikäynti datalle***, jossa poistetaan kaikkein röyhkeimmät outlierit.
+
+Kuvaajasta voidaan päätellä jo kaupan suhteellinen muoto. Siitä myös näkee, missä eniten vääränlaisia tietoja syntyy.
+Tuo "uloke" vasemmalla saattaisikin olla kaupan ulkopuolella oleva kärriparkki.
+Mutta mitään ei voi olettaa ennenkuin saadaan käsiin pohjapiirrustus.
