@@ -106,7 +106,7 @@ def draw_vel(df_original, df_new, columnX, columnY):
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_0d83d60eaadf85e61b82b3d69647ae26.png)
 ```
 Aika:  2:12:09.744104
-Alkuperäinen data: 809329
+Alkuperäinen data: 809329 # HUOM. Tässä oli jo pudotettu aukioloaikojen ulkopuolella olevat pisteet.
 Poistettuja pisteitä:  123420
 ```
 # Konkluusio
