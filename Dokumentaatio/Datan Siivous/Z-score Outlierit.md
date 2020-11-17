@@ -243,7 +243,7 @@ Kuvaajasta voidaan päätellä, että selvästi keskittymän ulkopuolella olevat
 
 Tästä voidaan päätellä tuossa suoralla kohdalla olevan seinä.
 
-# Konluusio
+# Konkluusio
 
 'z' ja 'q' kolumnit ovat siis aika turhia datassa, "korkeus" ei muutu kuin suurilla hypyillä ja "signaalin laatu" ei vaihdu ollenkaan.
 
