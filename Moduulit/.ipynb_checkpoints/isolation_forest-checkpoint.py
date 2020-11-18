@@ -37,9 +37,10 @@ def isolation_forest(df, random_state, contamination, node):
     print('Dataframe lenght after:', len(df))
     print('Total outliers detected:', len(if_anomalies))
     
-    # Plot results
+    #Plot results
     #plt.gca().invert_yaxis()
-    #plt.scatter(df['x'],df['y'],edgecolor='black')
+    #plt.scatter(df['x'],df['y'],edgecolor='black',s=15)
+    #plt.scatter(if_anomalies['x'],if_anomalies['y'],edgecolor='red',s=15)
     #plt.show()
     
     return df
