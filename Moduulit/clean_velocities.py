@@ -19,19 +19,19 @@ class velocity():
         else:
             return 0.1
 
-    def column_vel(df, column):
+    def column_vel(df, sarake):
         # Alustaa muuttujia
         prev = 0
         val = 0
         x = 0
         # x kolumnin indexi
-        column = df.columns.get_loc(column)
+        column = df.columns.get_loc(sarake)
         # timestampin indexi
         time_column = df.columns.get_loc('timestamp')
         # Iteroidaan taulukon pituuden läpi...
-        for i in range(len(df[column])):
+        for i in range(len(df[sarake])):
             # ...Niin pitkään kunnes päästään loppuun
-            if(i < len(df[column])):
+            if(i < len(df[sarake])):
                 # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
                 value1 = velocity.calc_velocity(df.iloc[i-x, time_column], df.iloc[i-(1+x), time_column])
                 # Lasketaan absoluuttinen arvo ja vähennetään siitä edellisen nopeuden absoluuttinen arvo
