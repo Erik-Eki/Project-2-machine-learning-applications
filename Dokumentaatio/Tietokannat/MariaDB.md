@@ -103,3 +103,70 @@ Tuloksiksi sain sekuntteina:
 Tulokset sekuntteina:
 80.089, 81.282, 79.223, 78.801, 78.504,
 78.629, 78.659, 77.972, 80.684, 79.761
+
+
+# Mariadb serverin lukeminen ja kirjoittaminen pythonilla
+Jos databaseen haluaa päästä käsiksi verkon ulkopuolelta niin täytyy avata portteja.
+# Tietokannasta lukeminen
+```python
+import mysql.connector
+import pandas as pd
+
+mydb = mysql.connector.connect(
+    # Mysql server address
+  host="0.0.0.0",
+  user="user_name",
+  port=3306,
+  passwd="insert-password-here",
+  database="database_name")
+
+mycursor = mydb.cursor(dictionary=True)
+mycursor.execute("SELECT * FROM database;" );
+
+df = pd.DataFrame(mycursor.fetchall())
+df.head()
+
+```
+
+# Tietokantaan kirjoittaminen Pandas Dataframesta
+
+```python
+from sqlalchemy import create_engine
+
+engine = create_engine('mysql+mysqlconnector://username:insert-password-here@0.0.0.0/database_name')
+
+
+new_df[x+1:x+y].to_sql('database_table_name', con = engine, if_exists = 'append',index = False)
+    
+```
+
+
+Jos tulee virhe ilmoitus 'Connection reset by peer' niin yksi keino on rajoittaa kirjoitus määrää per yhteys. Alla on rajoitettu 300 000 riviin kirjoitus per yhteys.
+```python
+x = 0
+y = 300000
+for i in range(39):
+    new_df[x:x+y].to_sql('database_table_name', con = engine, if_exists = 'append',index = False)
+    x += y
+```
+
+
+# Esimerkki 1. Taulun luominen tietokantaan
+```python
+import mysql.connector
+mydb = mysql.connector.connect(
+    # Mysql server address
+  host="0.0.0.0",
+  user="user_name",
+  port=3306,
+  passwd="insert-password-here",
+  database="database_name")
+
+mycursor = mydb.cursor(dictionary=True)
+
+mycursor.execute("USE iiwari_org;");
+mycursor.execute("DROP TABLE IF EXISTS New_Table;");
+mycursor.execute("CREATE TABLE New_Table (node_id INTEGER NOT NULL,timestamp DATETIME,x INTEGER NOT NULL,y INTEGER NOT NULL,x_grid INTEGER NOT NULL,y_grid INTEGER NOT NULL);");
+```
+
+
