@@ -23,7 +23,7 @@ def write_df_to_mariadb(df):
     mycursor = mydb.cursor(dictionary=True)
     mycursor.execute("USE iiwari_org;");
     mycursor.execute("DROP TABLE IF EXISTS CleanSensorData;");
-    mycursor.execute("CREATE TABLE CleanSensorData (node_id INTEGER NOT NULL,timestamp TEXT,x INTEGER NOT NULL,y INTEGER NOT NULL,x_grid INTEGER NOT NULL,y_grid INTEGER NOT NULL,xy_grid INTEGER NOT NULL);");
+    mycursor.execute("CREATE TABLE CleanSensorData (node_id INTEGER NOT NULL,timestamp TEXT,x INTEGER NOT NULL,y INTEGER NOT NULL,x_grid INTEGER NOT NULL,y_grid INTEGER NOT NULL,grid_id INTEGER NOT NULL);");
 
     # mysql engine init
     engine = create_engine('mysql+mysqlconnector://root:insert-password-here@172.28.200.50/iiwari_org')
@@ -32,6 +32,6 @@ def write_df_to_mariadb(df):
     x = 0
     y = 200000
 
-    for i in range(int(len(df))/y+1):
+    for i in range(int(len(df)/y+1)):
         df[x:x+y].to_sql('CleanSensorData', con = engine, if_exists = 'append',index = False)
         x += y
