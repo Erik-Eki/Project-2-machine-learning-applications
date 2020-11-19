@@ -34,6 +34,8 @@ def clean_dataframe(df):
     # Poistetaan alkuperäisestä dataframesta kyseiset arvot
     df = df.drop(df.index[df_new_temp.index.values])
     
+    df = df.reset_index(drop=True)
+    
     # Drop z and q columns
     df = df.drop(columns=['z','q'])
     
