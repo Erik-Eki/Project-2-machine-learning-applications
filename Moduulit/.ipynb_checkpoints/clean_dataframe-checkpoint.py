@@ -25,7 +25,7 @@ def clean_dataframe(df):
     # Poistetaan aukioloaikojen ulkopuolella olevat ajat
     df = df.drop(df[(df.timestamp.dt.hour < 8)].index) #dropataan kaikki 8-21 ulkopuolella olevat tunnit
     df = df.drop(df[(df.timestamp.dt.hour > 21)].index)
-    df = df.reset_index() # resetoidaan indexit, että voidaan ajaa uudet koodit
+    df = df.reset_index(drop=True) # resetoidaan indexit, että voidaan ajaa uudet koodit
     
     # Suodatetaan Sunnuntaitten aukioloajat
     df_temp = df[df.timestamp.dt.dayofweek == 6].index.values.tolist()
