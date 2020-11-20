@@ -62,6 +62,25 @@ def poista_lyhyet_reitit(reitit, minimi_määrä_dataa):
             clean_list.append(reitit[i])
     return clean_list
 
+def get_lapimeno(reitit, minimi_määrä_dataa):        
+
+    alo = []
+    lapimenoajat = [] #Luodaan pari uutta listaa
+        
+
+    
+    for i in range(len(reitit)):
+        if len(reitit[i].timestamp) > minimi_määrä_dataa:
+            alotus = reitit[i].node_id[0]
+            lopetus = reitit[i].node_id[-1]
+            lapimenoaika = (lopetus - alotus)
+            alo.append(alotus)
+            lapimenoajat.append(lapimenoaika)  #For looppi missä saadaan luotua läpimenoajat kärryille
+    
+    alotukset = {"Aloitus":alo }
+    Lapimenot = {"Lapimenoajat":lapimenoajat}  #Tallennetaan aloitusajat sekä läpimenoajat listoihin
+    print("Läpimenoajat", lapimenoajat)
+
 
         
 def erottele_reitit(df, in_ID, out_ID):
@@ -157,3 +176,4 @@ def plot_unique_routes(df_reitit, grid_size, in_x, in_y, out_x, out_y):
         facet.set_yticks(np.arange(0, grid_size+1,10))
         plt.legend([],[], frameon=False)
         plt.show()
+        
