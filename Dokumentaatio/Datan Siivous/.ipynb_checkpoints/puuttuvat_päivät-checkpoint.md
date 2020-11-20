@@ -3,12 +3,14 @@
 - Aluksi otimme koko datasetin käsittelyyn, että voimme etsiä kaikki puuttuvat päivät datasta
 - Kun datasetin sorttaa timestampin mukaan, huomataan että data on jakautunut aikavälille 5.5.2020 - 23.10.2020.
 - Lasketaan pandasin date_rangella monta päivää näiden päivämäärien välistä löytyy:
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_2b52aad256294361ee4c4da3fd77cdc0.png)
 
 - Kuten näkyy, päiviä on yhteensä 172.
 - Seuraavaksi etsimme dataframesta, kuinka monelta päivältä löydämme data entryjä
 - Sen suoritamme seuraavalla tavalla: 
 - Aluksi normalisoidaan dataframen timestamp kolumni, jotta sen sisältä päivämäärissä ei löydy tuntejen kohdalta kuin 00.00, näin voimme tarkastella helpommim uniikkeja päivämääriä:
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_5f70864bb9cbbec53769d8250ce89c44.png)
 
 - Seuraavaksi voimmekin laskea, monelta eri päivältä timestamppeja löytyy datasetissä:
