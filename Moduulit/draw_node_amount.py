@@ -1,3 +1,8 @@
+import numpy as np
+from collections import Counter
+import matplotlib.pyplot as plt
+from matplotlib import cm
+
 def draw_node_amount(df, column):
     # Kopioidaan taulu
     dftest = df.copy()
@@ -34,5 +39,5 @@ def draw_node_amount(df, column):
                  '{:1.2f}'.format(width), va='center', fontsize=9)
 
     plt.tight_layout()
-    plt.savefig("Nodejen käyttömäärä.png")
+    #plt.savefig("Nodejen käyttömäärä.png")
     plt.show()
