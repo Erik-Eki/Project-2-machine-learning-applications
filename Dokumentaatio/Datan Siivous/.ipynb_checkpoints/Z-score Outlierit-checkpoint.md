@@ -13,60 +13,18 @@ Se etsii outliereita laskemalla z-scoren katsomalla x ja y kolumneja.
 Tässä sitten se tosin, ettei se etsi outliereita ollenkaan esim. timestampin perusteella, mutta näin se vaikuttaisi järkevimmältä tässä vaiheesssa.
 
 # Alkuvalmistelut
-## Importtaus:
-```python
+Importtaus:
+```python=
 from outliers import find_outliers, draw_histogram
 ```
+
 Eli importataan paketti "outliers" ja sieltä kutsutaan kaksi funktiota: find_outliers ja draw_histogram
 
-## Käyttö:
-
-Funktio ottaa DataFrame:n syötteeksi.
-```python
-find_outliers(df)
-```
-
-Output:
-```Python
-Number of missing variables in table
- node_id      0
-timestamp    0
-x            0
-y            0
-z            0
-q            0
-dtype: int64
-------------------------------
-Unique values in columns
-
-uniques in x 3923
-uniques in y 3955
-uniques in z 1
-uniques in q 1
-------------------------------
-Checking z and q columns
-
-uniques in z [100]
-uniques in q [0]
-------------------------------
-Number of nodes: 1
-------------------------------
-Outliers
-
-Data with outliers:  50000
-Ouliers removed:     148
-Data after:  49852
-
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_a695065de04724b4dd2498967c8e0a76.png)
-```
-
----
-
-# Outlierien löytäminen Z-score
+# Outliers.py
 Käydäänpäs nopiaa läpi mitä outliers.py:ssä oikein tapahtuu:
 
 ## Importoinnit
-```python
+```python=
 # Imports
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -91,7 +49,7 @@ Histogrammin piirtämiseen tarvitaan pari muuttujaa:
     - Kuinka monta "palkkia" histogramissa on (ns. karkeus)
 
 Näitä tarvitaan myös normin todennäköisyystiheys-viivan laskemiseen
-```python
+```python=
 # Esim: draw_histogram(df2['x'], df2['y'], 20)
 def draw_histogram(x, y, bin_num):
     plt.figure(figsize=(15,10))
@@ -165,7 +123,7 @@ Katsotaanpas seuraavassa osiossa tämä numeerisesti.
 ## Outliereiden etsiminen & poistaminen
 
 Aluksi printtaillaan vähän, että mitä datassa nyt on:
-```python
+```python=
 def find_outliers(df):
     # Check for missing values
     missing_count = df.isnull().sum()
@@ -187,8 +145,6 @@ def find_outliers(df):
     # Checking how many different nodes
     amount_nodes = len(df["node_id"].unique())
     print(f"{'-'*30}\nNumber of nodes: {amount_nodes}")
-
-    # continues... -->
 ```
 Ulostulo näyttää tältä:
 ```
@@ -227,9 +183,7 @@ Z-score mitataan **keskihajannoilla** keskiarvosta.
 Z-score voivat olla positiivisia tai negatiivisia, ja positiivinen arvo osoittaa, että pisteet ovat keskiarvon yläpuolella, ja negatiiviset pisteet osoittavat, että ne ovat keskiarvon alapuolella.
 
 Joten: Nyt lasketaan itse se z-score datalle:
-```python
-    # ...Here!
-
+```python=
     # Only use the x and y columns
     df1 = df[["x","y"]]
 
@@ -267,7 +221,7 @@ Data after:  993517
 Kuten aavistelin viime histogrammin kohdalla, outliereita ei pitäisi olla kuin parisataa ja kuten näkyy: 173 outliereita löydetty.
 
 Piirretään kuva poistetuista pisteistä:
-```python
+```python=
 
     import matplotlib.pyplot as plt
     plt.gca().invert_yaxis()

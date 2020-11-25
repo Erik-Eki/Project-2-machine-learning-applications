@@ -41,13 +41,15 @@ Kuva kertoo enemmän kuin tuhat sanaa ja koodi on kommentoitu.
 
 Tämän poiston **kriteeri** on kahden eri pisteen absoluuttisten arvojen suuruus, jonka pitää olla alle tiettyjen arvojen (tässä tilanteessa 60 ja 100) &larr; *(Nämä arvot ovat siis sekunteja)*
 
-```python=
+```python
 import numpy as np
+import math
 import matplotlib.pyplot as plt
+
 
 class velocity():
     # Nopeuden laskun funktio
-    def calc_velocity(time_start, time_end):
+    def calc_velocity(self, time_start, time_end):
         # Lasketaan aloitus- ja lopetusajan erotus
         diff_time = np.datetime64(time_start) - np.datetime64(time_end)
         # Palauttaa sekuntien kokonaismäärän
@@ -61,40 +63,53 @@ class velocity():
             return diff_time
         else:
             return 0.1
+        
+    def calculateDistance(self, x1, y1, x2, y2):  
+        dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)  
+        return dist
 
-    def column_vel(df, column):
+    def column_vel(self, df, x_sarake, y_sarake):
         # Alustaa muuttujia
-        prev = 0
-        val = 0
-        x = 0
-        # kolumnin indexi
-        column = df.columns.get_loc(column)
+        df_original = df.copy()
+        devx1 = []
+        time = []
+        dist = []
+        speed = []
+        # x ja y kolumnin indexi
+        x_column = df.columns.get_loc(x_sarake)
+        y_column = df.columns.get_loc(y_sarake)
         # timestampin indexi
         time_column = df.columns.get_loc('timestamp')
-        # Iteroidaan taulukon pituuden läpi...
-        for i in range(len(df[column])):
-            # ...Niin pitkään kunnes päästään loppuun
-            if(i < len(df[column])):
-                # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
-                value1 = velocity.calc_velocity(df.iloc[i-x, time_column], df.iloc[i-(1+x), time_column])
-                # Lasketaan absoluuttinen arvo ja vähennetään siitä edellisen nopeuden absoluuttinen arvo
-                value2 = int((abs(df.iloc[i-x, column])) - prev)
-                # Laskee näiden osamäärän
-                val =  value2 / value1
+        i = 1
 
-                # Jos nopeus on liian suuri, pudottaa sen
-                if (val > 60 or value2 > 100):
-                    df.drop([df.index[i-x]], axis = 0, inplace = True)
-                    prev = abs(df.iloc[i-x, column])
-                    x +=1
-                else:
-                    prev = abs(df.iloc[i-x, column])
+        # Iteroidaan taulukon pituuden läpi
+        for i in range(len(df[x_sarake])):
+            # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
+            time.append(calc_velocity(df.iloc[i, time_column], df.iloc[i-1, time_column]))
+            # Sama kuin ylemmässä, mutta lisätään iteroitavan y kolumnin mukaan ja laskeetaan niiden välisen pituuden
+            dist.append(calculateDistance(abs(df.iloc[i, x_sarake]), abs(df.iloc[i, y_sarake]),abs(df.iloc[i-1, x_sarake]),  abs(df.iloc[i-1, y_sarake])))
+        
+        # Tyhjennetään "speed" lista
+        speed = []
+        # Iteroidaan pituuksien läpi
+        for i in range(len(dist)):
+            speed.append((dist[i] / 93)/time[i])
+        x = 0
+        
+        for i in speed:
+            if(i > 2 or (dist[x]/93) > 100):
+                df.drop([df.index[x]], axis = 0, inplace = True)
+                x -= 1
+            x += 1
+
+        print("Uusi taulu: ", len(df1['x'])) 
+        print("Poistettuja pisteitä: ", df_original - len(df[x_column]))
 ```
 
 # Kuvaaja
 Kuvaajan piirto on yksinkertainen:
 
-```python=
+```python
 def draw_vel(df_original, df_new, columnX, columnY):
         plt.figure(figsize=(10, 7))
         plt.plot(df_original[columnX], df_original[columnY], color="black", marker='o', linestyle='dashed', linewidth=0.2, markersize=3, label="Poistettu")

@@ -9,7 +9,7 @@ def isolation_forest(df, random_state, contamination, node):
     
     # x ja y arvot talteen
     x_temp = df.loc[df['node_id']==node][['x', 'y']]
-    
+        
     # Init minmaxscaler + fit+transform
     min_max_scaler = preprocessing.MinMaxScaler()
     x_scaled = min_max_scaler.fit_transform(x_temp)
@@ -28,10 +28,14 @@ def isolation_forest(df, random_state, contamination, node):
     if_anomalies=pd.Series(if_anomalies).replace([-1,1],[1,0])
     if_anomalies=xy_normalized[if_anomalies==1]
     
-    print('Dataframe lenght before:', len(df))
+    outliers = x_temp.loc[if_anomalies.index.values]
+    print('Dataframe lenght before:', len(x_temp))
     
     # Drop outliers from df + reset index
-    df = df.drop(df.index[if_anomalies.index.values])
+    x_temp = x_temp.drop(x_temp.index[if_anomalies.index.values])
+    
+    # Grab that sweet timestamp
+    df = df.loc[x_temp.index]
     df = df.reset_index(drop=True)
     
     print('Dataframe lenght after:', len(df))
@@ -39,8 +43,8 @@ def isolation_forest(df, random_state, contamination, node):
     
     #Plot results
     #plt.gca().invert_yaxis()
-    #plt.scatter(df['x'],df['y'],edgecolor='black',s=15)
-    #plt.scatter(if_anomalies['x'],if_anomalies['y'],edgecolor='red',s=15)
-    #plt.show()
+    plt.scatter(df['x'],df['y'],edgecolor='black',s=15)
+    plt.scatter(outliers['x'],outliers['y'],edgecolor='red',s=15)
+    plt.show()
     
     return df
