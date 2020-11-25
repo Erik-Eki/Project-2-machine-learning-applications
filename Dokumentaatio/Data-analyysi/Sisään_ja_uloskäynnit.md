@@ -51,4 +51,27 @@ sisään_y = df.loc[df.x_grid>=min_x].loc[df.x_grid<=max_x].loc[df.y_grid>=min_y
 - Ottaa seuraavat asiat sisään:
 - dataframen, jossa on jo määritelty gridit
 - Aiemmissa funktioissa määritellyt alueet, eli sisään_x, sisään_y, ulos_x, ulos_y
-- Aluksi funktio plottaa 
+- Aluksi funktio plottaa x_gridin ja y_gridin pisteet, eli kaikki datframen x ja y pisteet
+
+```
+plt.hist2d(df['x_grid'], df['y_grid'], bins = 100, norm = colors.LogNorm())
+```
+
+
+- Seuraavaksi se plottaa Sisään ja uloskäynnin alueet:
+
+```
+plt.hist2d(sisään_x, sisään_y, bins = 100, norm=colors.LogNorm(),cmap="cool", label="Sisäänkäynti")
+plt.hist2d(ulos_x, ulos_y, bins = 100, norm=colors.LogNorm(),cmap="spring", label="Kassat")
+```
+
+- Lopuksi skaalataan sisäänkäynnit koko kuvaan ja plotataan lopputulos:
+
+```
+plt.grid()
+    
+plt.show()
+
+```
+
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_2a39f7b5c130ce6e8de53c356ace11b0.png)
