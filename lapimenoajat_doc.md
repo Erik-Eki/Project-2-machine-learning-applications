@@ -1,7 +1,7 @@
 #### Läpimenoajat dokumentointi
 
 Ensin ohjelmoidaan luokka jossa on kärrit/korit ja timestamppien avulla saadaan tehtyä niistä lista. Tässä listassa on korien/kärryjen node_id:t, timestampit sekä koordinaatit. Näitten avulla voidaan katsoa muutokset kyseisissä muuttujissa ja näiden avulla määritellä ajokerrat.
-![](https://notebooks.dclabra.fi/user/kostikaa/lab/tree/Projekti2/projekti-2-team-fox/Screenshot_1.png)
+![](https://notebooks.dclabra.fi/user/kostikaa/files/Projekti2/projekti-2-team-fox/Screenshot_1.png?_xsrf=2%7Ca9b721a3%7Cd246370ae9d9bcc15b37bc7924559e7e%7C1605853961)
 
 Tämän jälkeen otetaan timestamppien perusteella joka ajokerran läpimenoaika.
 
