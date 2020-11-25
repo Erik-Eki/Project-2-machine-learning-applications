@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 class velocity():
     # Nopeuden laskun funktio
-    def calc_velocity(self, time_start, time_end):
+    def calc_velocity(time_start, time_end):
         # Lasketaan aloitus- ja lopetusajan erotus
         diff_time = np.datetime64(time_start) - np.datetime64(time_end)
         # Palauttaa sekuntien kokonaismäärän
@@ -20,42 +20,11 @@ class velocity():
         else:
             return 0.1
         
-    def calculateDistance(self, x1, y1, x2, y2):  
+    def calculateDistance(x1, y1, x2, y2):  
         dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)  
         return dist
     
-    '''
-    def column_vel(self, df, sarake):
-        # Alustaa muuttujia
-        prev = 0
-        val = 0
-        x = 0
-        # x kolumnin indexi
-        column = df.columns.get_loc(sarake)
-        # timestampin indexi
-        time_column = df.columns.get_loc('timestamp')
-        # Iteroidaan taulukon pituuden läpi...
-        for i in range(len(df[sarake])):
-            # ...Niin pitkään kunnes päästään loppuun
-            if(i < len(df[sarake])):
-                # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
-                value1 = velocity.calc_velocity(df.iloc[i-x, time_column], df.iloc[i-(1+x), time_column])
-                # Lasketaan absoluuttinen arvo ja vähennetään siitä edellisen nopeuden absoluuttinen arvo
-                value2 = int((abs(df.iloc[i-x, column])) - prev)
-                # Laskee näiden osamäärän
-                val =  value2 / value1
-
-                # Jos nopeus on liian suuri, pudottaa sen
-                if (val > 60 or value2 > 100):
-                    df.drop([df.index[i-x]], axis = 0, inplace = True)
-                    prev = abs(df.iloc[i-x, column])
-                    x +=1
-                else:
-                    prev = abs(df.iloc[i-x, column])
-                    
-        x = 0
-    '''
-    def column_vel(self, df, x_sarake, y_sarake):
+    def column_vel(df, x_sarake, y_sarake):
         # Alustaa muuttujia
         df_original = df.copy()
         devx1 = []
@@ -72,9 +41,9 @@ class velocity():
         # Iteroidaan taulukon pituuden läpi
         for i in range(len(df[x_sarake])):
             # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
-            time.append(calc_velocity(df.iloc[i, time_column], df.iloc[i-1, time_column]))
+            time.append(velocity.calc_velocity(df.iloc[i, time_column], df.iloc[i-1, time_column]))
             # Sama kuin ylemmässä, mutta lisätään iteroitavan y kolumnin mukaan ja laskeetaan niiden välisen pituuden
-            dist.append(calculateDistance(abs(df.iloc[i, x_sarake]), abs(df.iloc[i, y_sarake]),abs(df.iloc[i-1, x_sarake]),  abs(df.iloc[i-1, y_sarake])))
+            dist.append(velocity.calculateDistance(abs(df.iloc[i, x_column]), abs(df.iloc[i, y_column]),abs(df.iloc[i-1, x_column]),  abs(df.iloc[i-1, y_column])))
         
         # Tyhjennetään "speed" lista
         speed = []
@@ -92,32 +61,11 @@ class velocity():
                 x -= 1
             x += 1
 
-        print("Uusi taulu: ", len(df1['x'])) 
-        print("Poistettuja pisteitä: ", df_original - len(df[x_column]))
-
-    '''def y_vel(df, column):
-        prev = 0
-        val = 0
-        x = 0
-        column = df.columns.get_loc('y')
-        time_column = df.columns.get_loc('timestamp')
-        for i in range(len(df['y'])):
-
-            if(i < len(df['y'])):
-
-                value1 = velocity.calc_velocity(df.iloc[i-x, time_column], df.iloc[i-(1+x), time_column])
-                value2 = int((abs(df.iloc[i-x, column]))-prev)
-                val = value2 / value1
-
-                if (val > 60 or value2 > 100):
-                    df.drop([df.index[i-x]], axis = 0, inplace = True)
-                    prev = abs(df.iloc[i-x , column])
-                    x +=1
-                else:
-                    prev = abs(df.iloc[i-x, column])'''
+        print("Uusi taulu: ", len(df['x'])) 
+        print("Poistettuja pisteitä: ", len(df_original) - len(df))
 
 
-    def draw_vel(self, df_original, df_new, columnX, columnY):
+    def draw_vel(df_original, df_new, columnX, columnY):
         plt.figure(figsize=(10, 7))
         plt.plot(df_original[columnX], df_original[columnY], color="black", marker='o', linestyle='dashed', linewidth=0.2, markersize=3, label="Poistettu")
         plt.plot(df_new[columnX], df_new[columnY],color='cyan', marker='o',linewidth=0.2, markersize=2, markevery=3, label="Jääneet", alpha=0.3)
