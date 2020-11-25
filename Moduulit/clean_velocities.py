@@ -1,11 +1,12 @@
 import numpy as np
+import pandas as pd
 import math
 import matplotlib.pyplot as plt
 
 
 class velocity():
     # Nopeuden laskun funktio
-    def calc_velocity(time_start, time_end):
+    def calc_timejump(time_start, time_end):
         # Lasketaan aloitus- ja lopetusajan erotus
         diff_time = np.datetime64(time_start) - np.datetime64(time_end)
         # Palauttaa sekuntien kokonaismäärän
@@ -23,7 +24,7 @@ class velocity():
     def calculateDistance(x1, y1, x2, y2):  
         dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)  
         return dist
-    
+
     def column_vel(df, x_sarake, y_sarake):
         # Alustaa muuttujia
         df_original = df.copy()
@@ -41,17 +42,18 @@ class velocity():
         # Iteroidaan taulukon pituuden läpi
         for i in range(len(df[x_sarake])):
             # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
-            time.append(velocity.calc_velocity(df.iloc[i, time_column], df.iloc[i-1, time_column]))
+            time.append(velocity.calc_timejump(df.iloc[i, time_column], df.iloc[i-1, time_column]))
             # Sama kuin ylemmässä, mutta lisätään iteroitavan y kolumnin mukaan ja laskeetaan niiden välisen pituuden
-            dist.append(velocity.calculateDistance(abs(df.iloc[i, x_column]), abs(df.iloc[i, y_column]),abs(df.iloc[i-1, x_column]),  abs(df.iloc[i-1, y_column])))
+            dist.append(velocity.calculateDistance(abs(df.iloc[i, x_column]), abs(df.iloc[i, y_column]),abs(df.iloc[i-1, x_column]), abs(df.iloc[i-1, y_column])))
         
         # Tyhjennetään "speed" lista
         speed = []
-        # Iteroidaan pituuksien läpi
+        # Lasketaan nopeus jakamalla pituus nopeudella
         for i in range(len(dist)):
-            speed.append((dist[i] / 93)/time[i])
+            speed.append((dist[i] / 93) / time[i])
+            #speed.append((dist[i] / 93)/time[i])
+
         x = 0
-        
         # Postetaan liiat nopeudet joko:
         # jos nopeus on liian suuri (yli 2)
         # jos on kulkenut liian pitkän matkan liian nopeasti (jos yli 100 pistettä)
@@ -63,6 +65,13 @@ class velocity():
 
         print("Uusi taulu: ", len(df['x'])) 
         print("Poistettuja pisteitä: ", len(df_original) - len(df))
+        
+        new_df = pd.DataFrame(list(zip(speed, dist)),columns=['velocity', 'distance'])
+        #df['velocity'] = speed
+        #df['distance'] = dist
+        
+        
+        return new_df
 
 
     def draw_vel(df_original, df_new, columnX, columnY):
