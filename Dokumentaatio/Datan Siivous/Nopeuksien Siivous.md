@@ -68,7 +68,7 @@ class velocity():
         dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)  
         return dist
 
-    def column_vel(self, df, x_sarake, y_sarake):
+    def column_vel(df, x_sarake, y_sarake):
         # Alustaa muuttujia
         df_original = df.copy()
         devx1 = []
@@ -85,25 +85,28 @@ class velocity():
         # Iteroidaan taulukon pituuden läpi
         for i in range(len(df[x_sarake])):
             # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
-            time.append(calc_velocity(df.iloc[i, time_column], df.iloc[i-1, time_column]))
+            time.append(velocity.calc_velocity(df.iloc[i, time_column], df.iloc[i-1, time_column]))
             # Sama kuin ylemmässä, mutta lisätään iteroitavan y kolumnin mukaan ja laskeetaan niiden välisen pituuden
-            dist.append(calculateDistance(abs(df.iloc[i, x_sarake]), abs(df.iloc[i, y_sarake]),abs(df.iloc[i-1, x_sarake]),  abs(df.iloc[i-1, y_sarake])))
+            dist.append(velocity.calculateDistance(abs(df.iloc[i, x_column]), abs(df.iloc[i, y_column]),abs(df.iloc[i-1, x_column]), abs(df.iloc[i-1, y_column])))
         
         # Tyhjennetään "speed" lista
         speed = []
-        # Iteroidaan pituuksien läpi
+        # Lasketaan nopeus jakamalla pituus nopeudella
         for i in range(len(dist)):
             speed.append((dist[i] / 93)/time[i])
+
         x = 0
-        
+        # Postetaan liiat nopeudet joko:
+        # jos nopeus on liian suuri (yli 2)
+        # jos on kulkenut liian pitkän matkan liian nopeasti (jos yli 100 pistettä)
         for i in speed:
             if(i > 2 or (dist[x]/93) > 100):
                 df.drop([df.index[x]], axis = 0, inplace = True)
                 x -= 1
             x += 1
 
-        print("Uusi taulu: ", len(df1['x'])) 
-        print("Poistettuja pisteitä: ", df_original - len(df[x_column]))
+        print("Uusi taulu: ", len(df['x'])) 
+        print("Poistettuja pisteitä: ", len(df_original) - len(df))
 ```
 
 # Kuvaaja
