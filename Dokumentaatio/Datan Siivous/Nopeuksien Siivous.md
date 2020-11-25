@@ -86,12 +86,12 @@ class velocity():
         for i in range(len(df[x_sarake])):
             # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
             time.append(calc_velocity(df.iloc[i, time_column], df.iloc[i-1, time_column]))
-            # Sama kuin ylemmässä, mutta lisätään iteroitavan y kolumnin arvo mukaan ja laskeetaan niiden välisen pituuden
-            dist.append(calculateDistance(abs(df.iloc[i, x_sarake]), abs(df.iloc[i, y_sarake]),abs(df.iloc[i-1, x_sarake]),  abs(df.iloc[i-1, 3])))
+            # Sama kuin ylemmässä, mutta lisätään iteroitavan y kolumnin mukaan ja laskeetaan niiden välisen pituuden
+            dist.append(calculateDistance(abs(df.iloc[i, x_sarake]), abs(df.iloc[i, y_sarake]),abs(df.iloc[i-1, x_sarake]),  abs(df.iloc[i-1, y_sarake])))
         
         # Tyhjennetään "speed" lista
         speed = []
-        
+        # Iteroidaan pituuksien läpi
         for i in range(len(dist)):
             speed.append((dist[i] / 93)/time[i])
         x = 0
@@ -101,7 +101,8 @@ class velocity():
                 df.drop([df.index[x]], axis = 0, inplace = True)
                 x -= 1
             x += 1
-            
+
+        print("Uusi taulu: ", len(df1['x'])) 
         print("Poistettuja pisteitä: ", df_original - len(df[x_column]))
 ```
 
