@@ -79,7 +79,7 @@ def get_lapimeno(reitit, minimi_määrä_dataa):
     
     alotukset = {"Aloitus":alo }
     Lapimenot = {"Lapimenoajat":lapimenoajat}  #Tallennetaan aloitusajat sekä läpimenoajat listoihin
-    print("Läpimenoajat", lapimenoajat)
+    return lapimenoajat
 
 
         

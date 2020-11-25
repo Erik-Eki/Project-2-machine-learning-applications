@@ -35,3 +35,17 @@ def draw_exits(df, sisään_x, sisään_y, ulos_x, ulos_y):
     plt.grid()
     #plt.savefig("Heatmap(bin=100)")
     plt.show()
+    
+def xy_to_ID(x,y,grid_size):
+    """[Muokkaa annetut x- ja y-koordinaatit ID-muotoon.]
+
+    Args:
+        x ([float]): [gridiin sopiva x-koordinaatti]
+        y ([float]): [gridiin sopiva y-koordinaatti]
+        grid_size ([int]): [Arvo, jonka mukaan gridi on luotu]
+
+    Returns:
+        [int]: [Gridin koon mukaan muokattu ID]
+    """
+    ID = grid_size*y+x
+    return ID
