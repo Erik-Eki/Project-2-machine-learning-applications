@@ -12,7 +12,7 @@ Eli algorytmi etsii tälläiset pisteet ja poistaa ne.
 # Algorytmin käyttäminen
 
 Algorytmi on luokka nimeltään "velocity", jolla voidaan sitten käyttää funktioita "column_vel" ja "draw_vel".
-```python=
+```python
 # Importointi
 from clean_velocities import *
 ```
@@ -44,7 +44,7 @@ Poistettuja pisteitä:  50
 Kuva kertoo enemmän kuin tuhat sanaa ja koodi on kommentoitu.
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_3d2af79897d4542ce54a3b54861309d5.png)
 
-Tämän poiston **kriteeri** on kahden eri pisteen absoluuttisten arvojen suuruus, jonka pitää olla alle tiettyjen arvojen (tässä tilanteessa 60 ja 100) &larr; *(Nämä arvot ovat siis sekunteja)*
+Tämän poiston **kriteeri** on kahden eri pisteen nopeuden ja kuljetun matkan suuruus, jonka pitää olla alle tiettyjen arvojen.
 
 ```python
 import numpy as np
@@ -115,21 +115,36 @@ class velocity():
         # timestampin indexi
         time_column = df.columns.get_loc('timestamp')
         i = 1
+```
 
+Nyt siis iteroidaan taulukon läpi, otetaan piste ja sitä seuraava ja lasketaan niiden välinen nopeus ja kuljettu matka (Matka on siis pisteinä: 1 = 1 piste kuljettu)
+```python
         # Iteroidaan taulukon pituuden läpi
         for i in range(len(df[x_sarake])):
             # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
             time.append(velocity.calc_timejump(df.iloc[i, time_column], df.iloc[i+1, time_column]))
             # Sama kuin ylemmässä, mutta lisätään iteroitavan y kolumnin mukaan ja laskeetaan niiden välisen pituuden
             dist.append(velocity.calculateDistance(abs(df.iloc[i, x_column]), abs(df.iloc[i, y_column]),abs(df.iloc[i+1, x_column]), abs(df.iloc[i+1, y_column])))
+```
 
+Lasketaan pisteiden välinen nopeus simppelillä fysiikalla: **Matka jaettuna ajalla**
+```python
         # Lasketaan nopeus jakamalla pituus nopeudella
         for i in range(len(dist)):
             speed.append((dist[i] / 93) / time[i])
             #speed.append((dist[i] / 93)/time[i])
 
         x = 0
-        
+```
+
+Filtteröidään nyt liian suuret nopeudet ja kuljetut matkat pois:
+
+Kriteerit ovat seuraavanlaiset:
+- Jos nopeus on yli 2 km/h
+- Jos kuljettu matka on yli 100 pistettä
+
+Yksi node ei vain järkevästi voisi liikkua puolessa sekunnissa yli 100 pistettä vain 2 km/h tunti vauhtia.
+```python
         # Poistetaan liiat nopeudet joko:
         # jos nopeus on liian suuri (yli 2 km/h)
         # jos on kulkenut liian pitkän matkan liian nopeasti (jos yli 100 pistettä)
@@ -138,7 +153,14 @@ class velocity():
                 df.drop([df.index[x]], axis = 0, inplace = True)
                 x -= 1
             x += 1
+```
 
+Tulostetaan poistettujen pisteiden määrä ja luodaan syötettyyn tauluu uudet sarakkeet:
+- Velocity
+- Distance
+
+Oikein hyödylliset piirteet, jotka kannattaa ottaa talteen.
+```python
         print("Uusi taulu: ", len(df['x'])) 
         print("Poistettuja pisteitä: ", len(df_original) - len(df))
         
