@@ -106,5 +106,5 @@ df['current_hour'].loc[df['timestamp'].dt.dayofweek == 6] = df['current_hour'].l
 
 -Lopputulos jotakin tällaista:
 
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_2c8a6e76e93f7945352dda23368f8c01.png)
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_a0cf131f7592a669612247cbc2780f0a.png)
 
