@@ -167,15 +167,11 @@ def reitit_dataframeksi(reitit):
         [DataFrame]: [Palauttaa Dataframen, joka sisältää jokaisen datasta erotellun kauppareissun.]
     """
 
-
     kauppareissut = pd.DataFrame(None,None,None,None,None)
-    # käysään kaikki reittiobjektit läpi ja muodostetaan lisätään ne vuorollaan dataframeen.
-    for kauppareissu in reitit:
-        kauppareissu.yhdista_tiedot()
-        reitti = pd.DataFrame(kauppareissu.tiedot)
-        # Lisätään kaikki ajokerrat vuorollaan dataframeen.
-        kauppareissut = kauppareissut.append(reitti,  ignore_index=True)
+    reitt = []
+    kauppareissut = kauppareissut.append([pd.DataFrame({"ajokerta":a.ajokerta, "node_id":a.node_id, "timestamp":a.timestamp, "x":a.x, "y":a.y,"grid_id":a.ID}) for a in reitit])
     return kauppareissut
+
 ```
 
 Yksittäisistä kauppareiteista muodostettu dataframe näyttää tältä:
