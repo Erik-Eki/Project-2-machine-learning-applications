@@ -23,6 +23,7 @@ Seuraavaksi tehdään bin kellonajoille joka df.groupby komennolla yhdistetään
 Sitten voidaan rueta plottaamaan läpimenoajoista plotteja. Järkevin plotattava on tietysti keskiaika aina tiettyihin kellonaikoihin
 
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_9cae9757dd39be962de3e63415a214d8.png)
+
 Tässä näemme että eniten aikaa vietetään kaupassa klo 17-19 välissä mikä on ymmärrettävää sillä tähän aikaan ihmiset pääsevät töistä ja käyvät sitten työpäivän päätteeksi kaupassa.
 
 
@@ -35,4 +36,5 @@ Seuraavaksi otetaan talteen viikonpäivät sekä laitetaan ne oikeaan järjestyk
 Sitten vielä viikonpäiville sama keskiarvojen plottaus. Plottasin myös kokonaisajat joka päivälle mutta ne tuntuvat aika turhilta keskiarvoihin verrattuna.
 
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_c52bcbd6139919f283c7748b7026203a.png)
+
 Tässä plottauksessa sitten yllättävämmin näkyy että eniten kaupassa vietetään keskimäärin aikaa tiistaisin. Tässä plottaukset ovat kuitenkin todella tasaisia ja plottauksen yläpuolella näkyykin pyöristetyt arvot kaupassakäyntien ajoista mistä näemme että 8 minuuttia on yleisin arvo.
