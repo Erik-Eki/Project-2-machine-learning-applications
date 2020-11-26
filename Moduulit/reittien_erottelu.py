@@ -88,45 +88,48 @@ def get_lapimeno(reitit, minimi_määrä_dataa):
 
         
 def erottele_reitit(df, in_ID, out_ID):
-    """[Erottelee yksittäiset reitit annetusta dataframesta. ]
+    """[Iteroi jokaisen dataframen rivin, tutkii milloin uusi kauppareissu alkaa ja lisää reissun tiedot sille luotuun objektiin.]
 
     Args:
-        df ([DataFrame]): [Tietokannasta haettu data, josta yksittäiset ajokerrat halutaan erotella.]
-        in_ID ([List]): [Sisäänkäynnin x- ja y-koordinaateista muodostettujen ID:iden lista. ]
-        out_ID ([List]): [Kassojen x- ja y-koordinaateista muodostettujen ID:iden lista.]
+        df ([DataFrame]): [Diskretisoitu dataframe]
+        in_ID ([list]): [Sisäänkäyntialueen diskretisoidut koordinaatit ID-muodossa.]
+        out_ID ([list]): [Kassa-alueen diskretisoidut koordinaatit ID-muodossa.]
 
     Returns:
-        [List]: [Palauttaa listan objekteja, joista jokainen sisältää yhden kauppareitin tiedot.]
+        [list]: [Sisältää yksittäisten reittien objektit.]
     """
+    
+    # Luodaan dataframeen sarakkeet, joilla seurataan onko rivin paikkakoordinaatit kassa- tai sisäänkäyntialueilla.
+    df["IN"] = df["grid_id"].isin(in_ID)
+    df["OUT"] = df["grid_id"].isin(out_ID)
+
+    # Näiden avulla seurataan, että useampi peräkkäinen rivi on kassa- tai sisäänkäyntialueilla.
+    df['fo_IN'] = df['IN'].shift(5)
+    df['fo_OUT'] = df['OUT'].shift(10)
+
     cleaned_xy = df.copy()
     erotellut_reitit = []      #tähän tallennetaan erotellut kauppareissut
     ajokerta = 0   # pidetään kirjaa kuinka monta kertaa kärry on ajanut kaupan läpi. Käytetään Kärryjen etsimiseen ja erotteluun
     reitti = Reitti()      #luodaan karry
     erotellut_reitit.append(reitti)     #lisätään ensimmäinen karry listaan, koska data alkaa yleensä kesken ajokerran 
-    matkalla = False
+    matkalla = False    
+
     
-    
-    for val in range(len(cleaned_xy["grid_id"])-3):
-        # Mitataan kahden rivin timestamppien erotusta
-        # Luodaan uusi karry-olio, kun kärry/kori saapuu ensimmäisen kerran sisäänkäynnin kohdalle.
-                                                                            # Tarkistetaan, että kaksi pistettä peräkkäin on sisäänkäyntialueella 
-                                                                            # (yritetään poissulkea signaalivirheestä alueelle tulleet pisteet)
-        if cleaned_xy["grid_id"][val] in in_ID and matkalla == False and  cleaned_xy["grid_id"][val+3] in in_ID:
+    for row in df.itertuples():
+        
+        if matkalla == False and row.IN  == True and row.IN == row.fo_IN:
+            # Aloitetaan matka ja luodaan uusi olio kaupparaissulle.
             matkalla = True
             ajokerta += 1
             reitti = Reitti()      
             erotellut_reitit.append(reitti)
 
-        # lopetetaan matka, kun kärry saapuu kassoille (tarkistetaan taas, että useampi piste on alueella peräkkäin)
-        elif cleaned_xy["grid_id"][val] in out_ID and cleaned_xy["grid_id"][val+3] in out_ID:
+        elif row.OUT == True and row.OUT == row.fo_OUT:
             matkalla = False
-            
-        # Lisätään rivin teidot objektiin, jos kärry on matkalla (tarkistetaan myös, ettei kesken matkaa aleta vahingossakaan keräämään toisen node_idn tietoja, vaikka eipä tätä kai pitäisi edes päästä tapahtumaan.
-        elif  matkalla == True and cleaned_xy.node_id[val+1] == cleaned_xy.node_id[val]:
-            erotellut_reitit[ajokerta].lisaa(ajokerta, cleaned_xy.timestamp[val],cleaned_xy.node_id[val],cleaned_xy["grid_id"][val], cleaned_xy.x_grid[val], cleaned_xy.y_grid[val])
-            
-        erotellut_reitit[ajokerta].yhdista_tiedot()
-
+        
+        elif matkalla == True:
+            erotellut_reitit[ajokerta].lisaa(ajokerta, row.timestamp,row.node_id,row.grid_id, row.x_grid, row.y_grid)
+    
     return erotellut_reitit
 
 def reitit_dataframeksi(reitit):
