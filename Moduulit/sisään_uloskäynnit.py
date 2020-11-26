@@ -30,8 +30,8 @@ def ulos(df, x, y):
 def draw_exits(df, sisään_x, sisään_y, ulos_x, ulos_y, x, y):
     plt.hist2d(df[x], df[y], bins = 100, norm = colors.LogNorm())#bins=[np.arange(0,400,5),np.arange(0,300,5)]
 
-    plt.hist2d(sisään_x, sisään_y, bins = 150, norm=colors.LogNorm(),cmap="cool", label="Sisäänkäynti")
-    plt.hist2d(ulos_x, ulos_y, bins = 150, norm=colors.LogNorm(),cmap="spring", label="Kassat")
+    plt.hist2d(sisään_x, sisään_y, bins = 200, norm=colors.LogNorm(),cmap="cool", label="Sisäänkäynti")
+    plt.hist2d(ulos_x, ulos_y, bins = 200, norm=colors.LogNorm(),cmap="spring", label="Kassat")
     plt.axis('tight')
     # Loop over data dimensions and create text annotations.
     plt.grid()
