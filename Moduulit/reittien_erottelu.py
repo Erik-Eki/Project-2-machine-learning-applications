@@ -77,6 +77,12 @@ def get_lapimeno(reitit, minimi_määrä_dataa):
             alo.append(alotus)
             lapimenoajat.append(lapimenoaika)  #For looppi missä saadaan luotua läpimenoajat kärryille
     
+<<<<<<< HEAD
+    #aloitukset = {"Aloitus":alo }
+    #lapimenot = {"Lapimenoajat":lapimenoajat}  #Tallennetaan aloitusajat sekä läpimenoajat listoihin
+    #print("Läpimenoajat", lapimenoajat)
+=======
+>>>>>>> 727526729a7e2614c7310f21f805650f3e8a1612
     return alo, lapimenoajat
 
 
