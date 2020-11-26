@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def horrostila(df):
     # temp time_delta
@@ -11,3 +12,14 @@ def horrostila(df):
     df = df.drop(columns=['time_delta'])
     
     return df
+
+def draw_horrostilat(df, x, y):
+    dftest = df[df['Horrostila'] == True]
+    print("Poistetut horrostilassa olevat nodet: ",len(dftest))
+    plt.scatter(df[x], df[y], c='coral', marker='s', s=10, alpha=0.3, label="Normaalit")
+    plt.scatter(dftest[x], dftest[y], c='cyan', marker='s', edgecolors="black",  s=10, alpha=0.3, label="Horrostilassa")
+    plt.title("Nodejen status")
+    plt.xlabel(x)
+    plt.ylabel(y)
+    plt.legend()
+    plt.show()
