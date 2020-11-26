@@ -75,3 +75,15 @@ plt.show()
 ```
 
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_2a39f7b5c130ce6e8de53c356ace11b0.png)
+
+
+- Viimeisenä funktiona xy_to_ID
+- funktio ottaa sisälleen gridin x ja y koordinaatit
+- Ja gridin koon millä se on luotu
+- Palauttaa gridin koon mukaan muokatun ID:n
+
+```
+ID = grid_size*y+x
+    return ID
+
+```
