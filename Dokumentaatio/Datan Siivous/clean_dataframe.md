@@ -47,6 +47,12 @@ df['timestamp'] = df['timestamp'].str.slice(0, -7)
 df['timestamp'] = df['timestamp'].astype('datetime64[ns]')
 ```
 
+- Seuraavaksi lisätään viikonpäiväkolumni:
+
+```
+df['dayofweek'] = df.timestamp.dt.dayofweek
+```
+
 
 - Seuraavaksi se poistaa kaupan ulkopuolella olevan datan, eli normaaliarkena 8-21 ulkopuolella olevat ja sunnuntaisin 10-21 ulkopuolella olevat
 
@@ -62,6 +68,28 @@ df = df.drop(df.index[df_new_temp.index.values])
     
 df = df.reset_index(drop=True)
 ```
+
+
+- Sen jälkeen lisätään uusi kolumni, current_hour
+- Tämä sisältää tunnin milloin ollaan kaupassa, esim klo 8 on ensimmäinen tunti, 9 on toinen jne. kolumni muodossa int
+- Kolumni luodaan seuraavalla tavalla:
+
+ ```python=
+
+#alustetaan uusi kolumni nollalla, tähän tulee kyseinen tunti kaupassa, esimerkiksi klo 8 eli aukioloajan ensimmäinen tunti on 1
+df['current_hour'] = 0
+# Käydään läpi timestamp ja jokaikisen tunnin kohdalle lisätään yksi tunti. Aloitetaan tunnista 8
+#Koska 8-21 välillä 15 tuntia, ajetaan tämä 15 kertaa
+for i in range(15):
+    
+    df['current_hour'].loc[df['timestamp'].dt.hour == 8+i] = 
+#Sunnuntaina aloitetaan kaksi tuntia myöhemmin, joten vähennetään kaksi tuntia jokaisesta hetkestä
+df['current_hour'].loc[df['timestamp'].dt.dayofweek == 6] = df['current_hour'].loc[df['timestamp'].dt.dayofweek == 6] - 2
+    
+```
+
+
+
 
 
 - Lopuksi pudotetaan kolumnit 'z' ja 'q'
