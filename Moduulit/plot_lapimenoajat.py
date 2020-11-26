@@ -25,7 +25,7 @@ def plot_lapimeno(aloitukset, lapimenoajat):
     df2['viikonpäivä'] = pd.Categorical(df2['viikonpäivä'], categories=sorter, ordered=True)
     df2 = df2.sort_values('viikonpäivä')
 
-
+    päivät = df2['viikonpäivä']
     keskiarvot_pv = (df2.groupby (päivät)["Kesto"].count() / len(df2['Kesto'])) * 60
     keskiarvot_pv=(round(keskiarvot_pv))
 
