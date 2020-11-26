@@ -17,7 +17,7 @@ class Reitti:
         self.y = []
         self.ID = []
       
-        
+
     def lisaa(self,ajokerta, node_id, timestamp, ID, x, y):
         """[Lisätään kerättävät tiedot objektin listoihin.]
 
