@@ -1,4 +1,5 @@
 import pandas as pd
+import mysql.connector
 from sqlalchemy import create_engine
 
 def write_df_to_mariadb(df, table):
