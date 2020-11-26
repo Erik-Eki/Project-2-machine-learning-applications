@@ -71,9 +71,9 @@ class velocity():
         # Iteroidaan taulukon pituuden läpi
         for i in range(len(df[x_sarake])):
             # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
-            time.append(velocity.calc_timejump(df.iloc[i, time_column], df.iloc[i+1, time_column]))
+            time.append(velocity.calc_timejump(df.iloc[i, time_column], df.iloc[i-1, time_column]))
             # Sama kuin ylemmässä, mutta lisätään iteroitavan y kolumnin mukaan ja laskeetaan niiden välisen pituuden
-            dist.append(velocity.calculateDistance(abs(df.iloc[i, x_column]), abs(df.iloc[i, y_column]),abs(df.iloc[i+1, x_column]), abs(df.iloc[i+1, y_column])))
+            dist.append(velocity.calculateDistance(abs(df.iloc[i, x_column]), abs(df.iloc[i, y_column]),abs(df.iloc[i-1, x_column]), abs(df.iloc[i-1, y_column])))
 
         # Lasketaan nopeus jakamalla pituus nopeudella
         for i in range(len(dist)):
