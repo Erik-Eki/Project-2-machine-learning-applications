@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import math
 import matplotlib.pyplot as plt
-import math
 
 
 class velocity():
@@ -45,10 +44,6 @@ class velocity():
         dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)  
         return dist
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 727526729a7e2614c7310f21f805650f3e8a1612
     def column_vel(df, x_sarake, y_sarake):
         """[Laskee datapisteiden välisen nopeuden]
 
@@ -72,7 +67,6 @@ class velocity():
         # timestampin indexi
         time_column = df.columns.get_loc('timestamp')
         i = 1
-<<<<<<< HEAD
 
         # Iteroidaan taulukon pituuden läpi
         for i in range(len(df[x_sarake])):
@@ -85,35 +79,6 @@ class velocity():
         for i in range(len(dist)):
             speed.append((dist[i] / 93) / time[i])
             #speed.append((dist[i] / 93)/time[i])
-=======
-
-        # Iteroidaan taulukon pituuden läpi
-        for i in range(len(df[x_sarake])):
-            # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
-            time.append(velocity.calc_velocity(df.iloc[i, time_column], df.iloc[i-1, time_column]))
-            # Sama kuin ylemmässä, mutta lisätään iteroitavan y kolumnin mukaan ja laskeetaan niiden välisen pituuden
-            dist.append(velocity.calculateDistance(abs(df.iloc[i, x_column]), abs(df.iloc[i, y_column]),abs(df.iloc[i-1, x_column]),  abs(df.iloc[i-1, y_column])))
-        
-        # Tyhjennetään "speed" lista
-        speed = []
-        # Iteroidaan pituuksien läpi
-        for i in range(len(dist)):
-            speed.append((dist[i] / 93)/time[i])
-        x = 0
-        
-        # Postetaan liiat nopeudet joko:
-        # jos nopeus on liian suuri (yli 2)
-        # jos on kulkenut liian pitkän matkan liian nopeasti (jos yli 100 pistettä)
-        for i in speed:
-            if(i > 2 or (dist[x]/93) > 100):
-                df.drop([df.index[x]], axis = 0, inplace = True)
-                x -= 1
-            x += 1
-
-        print("Uusi taulu: ", len(df['x'])) 
-        print("Poistettuja pisteitä: ", len(df_original) - len(df))
-
->>>>>>> 727526729a7e2614c7310f21f805650f3e8a1612
 
         x = 0
         

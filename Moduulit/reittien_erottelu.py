@@ -36,16 +36,7 @@ class Reitti:
         self.x.append(x)
         self.y.append(y)
         
-    def yhdista_tiedot(self):
-        """[Luo Dictionaryn, johon yhdistetään kaikki objektiin tallennettu data.]
-        """
-        self.tiedot = {"ajokerta": self.ajokerta,
-                   "timestamp": self.node_id,
-                   "node_id": self.timestamp,
-                   "ID": self.ID,
-                   "x":self.x,
-                   "y":self.y}
-
+    
 def poista_lyhyet_reitit(reitit, minimi_määrä_dataa):
     """[Poistaa kauppareissut, joissa annettua arvoa pienempi määrä dataa.]
 
@@ -62,28 +53,7 @@ def poista_lyhyet_reitit(reitit, minimi_määrä_dataa):
             clean_list.append(reitit[i])
     return clean_list
 
-def get_lapimeno(reitit, minimi_määrä_dataa):        
 
-    alo = []
-    lapimenoajat = [] #Luodaan pari uutta listaa
-        
-
-    
-    for i in range(len(reitit)):
-        if len(reitit[i].timestamp) > minimi_määrä_dataa:
-            alotus = reitit[i].node_id[0]
-            lopetus = reitit[i].node_id[-1]
-            lapimenoaika = (lopetus - alotus)
-            alo.append(alotus)
-            lapimenoajat.append(lapimenoaika)  #For looppi missä saadaan luotua läpimenoajat kärryille
-    
-<<<<<<< HEAD
-    #aloitukset = {"Aloitus":alo }
-    #lapimenot = {"Lapimenoajat":lapimenoajat}  #Tallennetaan aloitusajat sekä läpimenoajat listoihin
-    #print("Läpimenoajat", lapimenoajat)
-=======
->>>>>>> 727526729a7e2614c7310f21f805650f3e8a1612
-    return alo, lapimenoajat
 
 
         
@@ -145,12 +115,10 @@ def reitit_dataframeksi(reitit):
 
     kauppareissut = pd.DataFrame(None,None,None,None,None)
     # käysään kaikki reittiobjektit läpi ja muodostetaan lisätään ne vuorollaan dataframeen.
-    for kauppareissu in reitit:
-        kauppareissu.yhdista_tiedot()
-        reitti = pd.DataFrame(kauppareissu.tiedot)
-        # Lisätään kaikki ajokerrat vuorollaan dataframeen.
-        kauppareissut = kauppareissut.append(reitti,  ignore_index=True)
+    reitt = []
+    kauppareissut = kauppareissut.append([pd.DataFrame({"ajokerta":a.ajokerta, "node_id":a.node_id, "timestamp":a.timestamp, "x":a.x, "y":a.y,"grid_id":a.ID}) for a in reitit])
     return kauppareissut
+
 
 def plot_all_routes(df_reitit, grid_size):
     """Plottaa kaikki erotellut reitit samaan kuvaajaan]
@@ -184,3 +152,21 @@ def plot_unique_routes(df_reitit, grid_size, in_x, in_y, out_x, out_y):
         plt.legend([],[], frameon=False)
         plt.show()
         
+        
+def get_lapimeno(reitit, minimi_määrä_dataa):        
+
+    alo = []
+    lapimenoajat = [] #Luodaan pari uutta listaa
+        
+
+    
+    for i in range(len(reitit)):
+        if len(reitit[i].timestamp) > minimi_määrä_dataa:
+            alotus = reitit[i].node_id[0]
+            lopetus = reitit[i].node_id[-1]
+            lapimenoaika = (lopetus - alotus)
+            alo.append(alotus)
+            lapimenoajat.append(lapimenoaika)  #For looppi missä saadaan luotua läpimenoajat kärryille
+    
+
+    return alo, lapimenoajat

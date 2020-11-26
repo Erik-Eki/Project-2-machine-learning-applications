@@ -28,23 +28,14 @@ def ulos(df):
 def draw_exits(df, sisään_x, sisään_y, ulos_x, ulos_y):
     plt.hist2d(df['x_grid'], df['y_grid'], bins = 100, norm = colors.LogNorm())#bins=[np.arange(0,400,5),np.arange(0,300,5)]
 
-<<<<<<< HEAD
     plt.hist2d(sisään_x, sisään_y, bins = 150, norm=colors.LogNorm(),cmap="cool", label="Sisäänkäynti")
     plt.hist2d(ulos_x, ulos_y, bins = 150, norm=colors.LogNorm(),cmap="spring", label="Kassat")
-=======
-    plt.hist2d(sisään_x, sisään_y, bins = 100, norm=colors.LogNorm(),cmap="cool", label="Sisäänkäynti")
-    plt.hist2d(ulos_x, ulos_y, bins = 100, norm=colors.LogNorm(),cmap="spring", label="Kassat")
->>>>>>> 727526729a7e2614c7310f21f805650f3e8a1612
     plt.axis('tight')
     # Loop over data dimensions and create text annotations.
     plt.grid()
     #plt.savefig("Heatmap(bin=100)")
     plt.show()
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 727526729a7e2614c7310f21f805650f3e8a1612
 def xy_to_ID(x,y,grid_size):
     """[Muokkaa annetut x- ja y-koordinaatit ID-muotoon.]
 
@@ -57,8 +48,7 @@ def xy_to_ID(x,y,grid_size):
         [int]: [Gridin koon mukaan muokattu ID]
     """
     ID = grid_size*y+x
-<<<<<<< HEAD
+
     return ID
-=======
-    return ID
->>>>>>> 727526729a7e2614c7310f21f805650f3e8a1612
+
+
