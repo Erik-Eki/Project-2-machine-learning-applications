@@ -1,9 +1,11 @@
-# Write_df_to_database
 
-Moduuli ottaa sisään dataframen
+# Write_df_to_database
 
 ## 1. Tietokanta (MariaDB) Yhteys
 
+Funktio ottaa sisään dataframen ja taulun nimen: ```write_df_to_database(df, 'Taulu')```
+
+Funktio luo uuden tai kysyy dropataanko olemassa oleva taulu.
 
 ```python
 import mysql.connector
@@ -17,51 +19,53 @@ database="iiwari_org")
 # create new table to mariadb-server
 mycursor = mydb.cursor(dictionary=True)
 ```
-## 2. Taulun luominen tietokantaan -> TODO: Laita omaan moduuliin
-*mycursor.execute*:lla voidaan suorittaa tietokantaan sql kyselyjä. Mennään halutun tietokannan sisälle ja luodaan sinne uusi TAULU muotoa:
+## 2. Tarkistetaan onko taulu jo tietokannassa
 
+Jos taulu löytyy tietokannasta niin palauttaa kyselyn, jossa kysytään varmistusta olemassa olevan taulun poistamisesta.
 
-
-|          | node_id | timestamp | x   |y  | x_grid|y_grid |grid_id|
-| -------- | -------- | -------- | ----|---|---|---|---|
-| 0     |      |      | |||
+Muuten jatkaa ilman varmistusta.
 
 
 ```python
-mycursor.execute("USE iiwari_org;");
-mycursor.execute("DROP TABLE IF EXISTS CleanSensorData;");
-mycursor.execute("CREATE TABLE CleanSensorData (node_id INTEGER NOT NULL,timestamp TEXT,x INTEGER NOT NULL,y INTEGER NOT NULL,x_grid INTEGER NOT NULL,y_grid INTEGER NOT NULL,grid_id INTEGER NOT NULL);");
+try:
+        mycursor.execute("DROP TABLE IF EXISTS {};".format(table))
+        print("Existing table found. Prepairing to Drop Table named {}...".format(table))
+        
+        while True: 
+            confirm = input('Continue? yes/no: ')
+
+            if confirm == 'yes' or confirm == 'y':
+                break;
+            elif confirm == 'no' or confirm == 'n':
+                return print('Aborting...')
+            else:
+                print("Invalid input. Try again")
+        
+    except ReferenceError:
+        print("No existing table named {} found. Writing started...".format(table)) 
 ```
 
-## 3. Dataframen kirjoittaminen tehtyyn tauluun sqlalchemyllä -> TODO: Tee chunkit dataframen jakamiseen
+## 3. Dataframen kirjoittaminen tietokantaan
 
+Ensiksi tehdään sqlalchemyn vaatima engine(tietokantayhteys).
+Tehdään dataframesta 200 000 rivin kokoisia chunkkeja jotka sitten syötetään annettuun tauluun.
 
-### 3.1 Luodaan sqlalchemy engine johon parametreina laitetaan sql-servun user, password ja host(ip)
+Taulusta tulee samaa muotoa kuin dataframesta eli sarakkeiden mukaan.
 
 ```python
-from sqlalchemy import create_engine
+    # mysql engine init
+    engine = create_engine('mysql+mysqlconnector://root:insert-password-here@172.28.200.50/iiwari_org')
+    
+    print("Done! Prepairing to write dataframe to {}".format(table))
 
-engine = create_engine('mysql+mysqlconnector://root:insert-password-here@172.28.200.50/iiwari_org')
+    # Kirjoitetaan osissa koko dataframe koska tulee muuten yhteyden aikakatkaisu
+    n = 200000  # chunk size
+    list_df = [df[i:i+n] for i in range(0,df.shape[0],n)]
+
+    for i in range(len(list_df)):
+        list_df[i].to_sql(table, con = engine, if_exists = 'append',index = False)
+        print('Writing data', i+1, '/', len(list_df))
+    
+    print("Done!")
 ```
 
-
-### 3.2 Kirjoitetaan dataframe osissa tietokantaan. -> TODO: Muunnos CHUNKEIKSI
-
-Liian ison määrän kirjoittaminen aiheuttaa aikakatkaisun (Connection-reset-by-peer), siksi joudumme osissa kirjottamaan
-
-
-enkä jaksa dokumentoida tätä mutta jos dataframe on tarpeeksi pieni niin saadaan se menemään kyseisellä komennolla, jossa
-- 'CleanSensordData' = tietokannassa oleva taulu mihin data tungetaan
-- con = **3.1**:ssä tehty *engine*
-- if_exist = mitä tehdään jos taulu on olemassa.
-- index = Halutaanko dataframen indeksointi mukaan
-
-```df.to_sql('CleanSensorData', con = engine, if_exists = 'append',index = False)```
-```python
-x = 0
-y = 200000
-
-for i in range(int(len(df)/y+1)):
-    df[x:x+y].to_sql('CleanSensorData', con = engine, if_exists = 'append',index = False)
-    x += y
-```
