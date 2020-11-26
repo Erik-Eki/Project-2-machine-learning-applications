@@ -41,9 +41,14 @@ plt.ylabel('y')
 plt.legend()
 plt.show()
 ```
-```Poistetut horrostilassa olevat nodet:  454```
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_ff9d8c4c5dc6d6610ff570b135258847.png)
+```
+Alkuperäiset nodet:  553983
+Poistetut horrostilassa olevat nodet:  458319
+Horrostilassa olevat nodet:  95664
+```
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_44c6f8e88aaf092e2e6b4591f22fe4e9.png)
+
 
 # Konkluusio
 
-Kuvan perusteella voidaan päätellä, että kassoille jätetyt korit ja muut menevät horrostilaan, kuin myös muutamia hylättyjä kärrejä/koreja löytyy vähän ympäri kauppaa, muttei liian paljon.
+Kuvan perusteella voidaan päätellä, että kassoille jätetyt korit ja muut menevät horrostilaan, kuin myös kaupan sisäänkäynnillä odottavat. Mutta myös ilmeisesti kaupan sisällä on muutamia hylättyjä kärryjä/koreja.
