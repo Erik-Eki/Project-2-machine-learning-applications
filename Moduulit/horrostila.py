@@ -15,7 +15,9 @@ def horrostila(df):
 
 def draw_horrostilat(df, x, y):
     dftest = df[df['Horrostila'] == True]
-    print("Poistetut horrostilassa olevat nodet: ",len(dftest))
+    print("Alkuperäiset nodet: ",len(df))
+    print("Poistetut horrostilassa olevat nodet: ", len(df) - len(dftest))
+    print("Horrostilassa olevat nodet: ",len(dftest))
     plt.scatter(df[x], df[y], c='coral', marker='s', s=10, alpha=0.3, label="Normaalit")
     plt.scatter(dftest[x], dftest[y], c='cyan', marker='s', edgecolors="black",  s=10, alpha=0.3, label="Horrostilassa")
     plt.title("Nodejen status")
