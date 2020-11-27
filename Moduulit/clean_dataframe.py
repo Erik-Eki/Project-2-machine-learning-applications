@@ -57,4 +57,11 @@ def clean_dataframe(df):
     # Drop z and q columns
     df = df.drop(columns=['z','q'])
     
+    # Poistetaan huonot nodet
+    df = df[df.node_id != 13]
+    df = df[df.node_id != 14]
+    df = df[df.node_id != 18]
+    df = df[df.node_id != 27]
+    df = df[df.node_id != 32]
+    
     return df
