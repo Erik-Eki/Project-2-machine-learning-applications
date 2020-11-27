@@ -95,7 +95,7 @@ def erottele_reitit(df, in_ID, out_ID):
             matkalla = False
         
         elif matkalla == True:
-            erotellut_reitit[ajokerta].lisaa(ajokerta, row.timestamp,row.node_id,row.grid_id, row.x_grid, row.y_grid)
+            erotellut_reitit[ajokerta].lisaa(ajokerta,row.node_id, row.timestamp,row.grid_id, row.x_grid, row.y_grid)
     
     return erotellut_reitit
 
