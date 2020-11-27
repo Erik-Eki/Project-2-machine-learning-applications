@@ -92,13 +92,22 @@ df['current_hour'].loc[df['timestamp'].dt.dayofweek == 6] = df['current_hour'].l
 
 
 
-- Lopuksi pudotetaan kolumnit 'z' ja 'q'
+- Sitten pudotetaan kolumnit 'z' ja 'q'
 
 
 `df = df.drop(columns=['z','q'])`
 
+- Lopuksi poistetaan huonot ja vialliset nodet, nämä tutkittu plottaamalla kaikki nodet
+- Huonot yksilö, ovat 13, 14, 18, 27 ja 32
 
+```python=
+ df = df[df.node_id != 13]
+ df = df[df.node_id != 14]
+ df = df[df.node_id != 18]
+ df = df[df.node_id != 27]
+ df = df[df.node_id != 32]
 
+```
 
 ### Yhteenveto
 
