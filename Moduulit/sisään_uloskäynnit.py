@@ -4,7 +4,7 @@ from matplotlib import colors
 def sisään(df, x, y):
     grid_size = max(df[x])+1
     min_x = 0.7 * grid_size
-    max_x = 0.8 * grid_size
+    max_x = 0.83 * grid_size
     min_y = 0 * grid_size
     max_y = 0.35 * grid_size
     
@@ -17,7 +17,7 @@ def ulos(df, x, y):
     grid_size = max(df[y])+1
     min_x = 0.3 * grid_size
     max_x = 0.55 * grid_size
-    min_y = 0.2 * grid_size
+    min_y = 0 * grid_size
     max_y = 0.35 * grid_size
     
     #ulos_x = df.loc[df.x_grid>=min_x].loc[df.x_grid<=max_x].loc[df.y_grid>=min_y].loc[df.y_grid<=max_y].x_grid
@@ -30,8 +30,10 @@ def ulos(df, x, y):
 def draw_exits(df, sisään_x, sisään_y, ulos_x, ulos_y, x, y):
     plt.hist2d(df[x], df[y], bins = 100, norm = colors.LogNorm())#bins=[np.arange(0,400,5),np.arange(0,300,5)]
 
-    plt.hist2d(sisään_x, sisään_y, bins = 200, norm=colors.LogNorm(),cmap="cool", label="Sisäänkäynti")
-    plt.hist2d(ulos_x, ulos_y, bins = 200, norm=colors.LogNorm(),cmap="spring", label="Kassat")
+    plt.scatter(sisään_x, sisään_y,c='cyan', s=5, marker='s', label="Sisäänkäynti")
+    plt.scatter(sisään_x, sisään_y,c='lime', s=5, marker='s', label="Kassat")
+    #plt.hist2d(sisään_x, sisään_y, bins = 200, norm=colors.LogNorm(),cmap="cool", label="Sisäänkäynti")
+    #plt.hist2d(ulos_x, ulos_y, bins = 200, norm=colors.LogNorm(),cmap="spring", label="Kassat")
     plt.axis('tight')
     # Loop over data dimensions and create text annotations.
     plt.grid()
