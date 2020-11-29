@@ -41,10 +41,20 @@ def isolation_forest(df, random_state, contamination, node):
     print('Dataframe lenght after:', len(df))
     print('Total outliers detected:', len(if_anomalies))
     
+    total_data = len(x_temp)
+    total_missing = len(if_anomalies)
+    percentage = (total_missing/total_data) * 100
+    percentage_remain = (1 - (total_missing/total_data)) * 100
+    print("Percent removed:   ",round(percentage, 2),'%')
+    print("Percent remaining: ",round(percentage_remain, 2),'%')
+    
     #Plot results
     #plt.gca().invert_yaxis()
-    plt.scatter(df['x'],df['y'],edgecolor='black',s=15)
-    plt.scatter(outliers['x'],outliers['y'],edgecolor='red',s=15)
+    plt.scatter(df['x'],df['y'],edgecolor='black',s=15, label="Jääneet")
+    plt.scatter(outliers['x'],outliers['y'],edgecolor='red',s=15, label="Poistetut")
+    plt.ylabel("x")
+    plt.ylabel("y", rotation='0')
+    plt.legend()
     plt.show()
     
     return df

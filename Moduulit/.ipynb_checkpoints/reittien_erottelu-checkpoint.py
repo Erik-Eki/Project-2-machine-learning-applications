@@ -133,6 +133,7 @@ def plot_unique_routes(df_reitit, grid_size, in_x, in_y, out_x, out_y):
          df_reitit ([DataFrame]): [Sisältää erotellut kauppareitit]
          grid_size ([int]): [Gridin koko on määritelty tämän mukaan.]
      """
+    
     ajot = df_reitit["ajokerta"].unique()
     df_reitit["color"] = np.arange(0,len(df_reitit),1)
     for ajo in ajot:

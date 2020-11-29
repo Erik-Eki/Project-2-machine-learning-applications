@@ -2,7 +2,7 @@ import pandas as pd
 
 
 def aukioloajat(df):
-    
+    print(len(df.drop(df[(df.timestamp.dt.hour < 8)].index)))
     df = df.drop(df[(df.timestamp.dt.hour < 8)].index) #dropataan kaikki 8-21 ulkopuolella olevat tunnit
     df = df.drop(df[(df.timestamp.dt.hour > 21)].index)
     df = df.reset_index() # resetoidaan indexit, että voidaan ajaa uudet koodit

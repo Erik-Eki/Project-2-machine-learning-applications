@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import seaborn as sns
 from scipy.stats import norm
 from scipy.stats import zscore
 import numpy as np
@@ -12,15 +11,18 @@ def find_outliers(df):
 
     # Check for unique values in columns
     print(f"{'-'*30}\nUnique values in columns\n")
-    print("uniques in x",len(df['x'].unique()))
+    for i in df.columns.tolist():
+        print(f"uniques in {i}: {len(df[i].unique())}")
+    '''print("uniques in x",len(df['x'].unique()))
     print("uniques in y",len(df['y'].unique()))
     print("uniques in z",len(df['z'].unique()))
-    print("uniques in q",len(df['q'].unique()))
+    print("uniques in q",len(df['q'].unique()))'''
 
 
-    print(f"{'-'*30}\nChecking z and q columns\n")
-    print("uniques in z",df['z'].unique())
-    print("uniques in q",df['q'].unique())
+    if 'z' and 'q' in df.columns.tolist():
+        print(f"{'-'*30}\nChecking z and q columns\n")
+        print("uniques in z",df['z'].unique())
+        print("uniques in q",df['q'].unique())
 
 
     # Checking how many different nodes
@@ -50,13 +52,21 @@ def find_outliers(df):
     print(f"{'-'*30}\nOutliers\n")
     print("Data with outliers: ", len(df))
     print("Ouliers removed:    ", len(df) - len(df_clean))
-    print("Data after: ", len(df_clean))
+    print("Data after:         ", len(df_clean))
+    
+    total_data = len(df)
+    total_missing = len(df) - len(df_clean)
+    percentage = (total_missing/total_data) * 100
+    percentage_remain = (1 - (total_missing/total_data)) * 100
+    print("Percent removed:   ",round(percentage, 2),'%')
+    print("Percent remaining: ",round(percentage_remain, 2),'%')
+    print(f"{'-'*30}")
 
-
-    import matplotlib.pyplot as plt
-    plt.gca().invert_yaxis()
-    plt.plot(df_clean["x"], df_clean["y"], color="red", marker='o', linestyle='dashed', linewidth=0.2, markersize=3)
-    plt.plot(potato["x"], potato["y"], color="blue", marker='x', linestyle='dashed', linewidth=0.2, markersize=3)
+    plt.plot(df_clean["x"], df_clean["y"], color="red", marker='o', markersize=3, label="Jääneet")
+    plt.plot(potato["x"], potato["y"], color="blue", marker='x', linestyle='dashed', linewidth=0.2, markersize=3, label="Poistetut")
+    plt.xlabel("x")
+    plt.ylabel("y", rotation='0')
+    plt.legend()
     plt.savefig("outliers-in-data.png")
     plt.show
 
@@ -64,7 +74,7 @@ def find_outliers(df):
 
 # Esim: draw_histogram(df2['x'], df2['y'], 20)
 def draw_histogram(x, y, bin_num):
-    plt.figure(figsize=(15,10))
+    plt.figure(figsize=(15,6))
     # mean of distribution
     mu = np.mean(x)
     mu2 = np.mean(y)
@@ -92,8 +102,8 @@ def draw_histogram(x, y, bin_num):
     #y = ((1 / (np.sqrt(2 * np.pi) * sigma)) * np.exp(-0.5 * (1 / sigma * (bins - mu))**2))
     #y2 = ((1 / (np.sqrt(2 * np.pi) * sigma2)) * np.exp(-0.5 * (1 / sigma2 * (bins2 - mu2))**2))
 
-    plt.plot(bins, y, 'r', alpha=0.8, label='x')
-    plt.plot(bins2, y2, 'b', alpha=0.8, label='y')
+    plt.plot(bins, y, 'r', alpha=0.8, label='x-käyrä')
+    plt.plot(bins2, y2, 'b', alpha=0.8, label='y-käyrä')
 
     plt.title("Histogrammi lmao (bins %s)" % num_bins)
     plt.xlabel("Arvo")
