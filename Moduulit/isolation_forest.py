@@ -28,7 +28,7 @@ def isolation_forest(df, random_state, contamination, node):
     if_anomalies=pd.Series(if_anomalies).replace([-1,1],[1,0])
     if_anomalies=xy_normalized[if_anomalies==1]
     
-    outliers = x_temp.loc[if_anomalies.index.values]
+    outliers = x_temp.iloc[if_anomalies.index.values]
     print('Dataframe lenght before:', len(x_temp))
     
     # Drop outliers from df + reset index
