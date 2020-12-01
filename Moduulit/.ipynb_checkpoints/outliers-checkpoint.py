@@ -62,7 +62,7 @@ def find_outliers(df):
     print("Percent remaining: ",round(percentage_remain, 2),'%')
     print(f"{'-'*30}")
 
-    plt.plot(df_clean["x"], df_clean["y"], color="red", marker='o', markersize=3, label="Jääneet")
+    plt.plot(df_clean["x"], df_clean["y"], color="red", marker='o', markersize=3, linestyle='dashed', linewidth=0.2, label="Jääneet")
     plt.plot(potato["x"], potato["y"], color="blue", marker='x', linestyle='dashed', linewidth=0.2, markersize=3, label="Poistetut")
     plt.xlabel("x")
     plt.ylabel("y", rotation='0')
