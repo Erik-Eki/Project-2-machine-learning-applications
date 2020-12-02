@@ -25,19 +25,18 @@ def clean_dataframe(df):
     # viikonpäiväkolumni
     df['dayofweek'] = df.timestamp.dt.dayofweek
 
-    print(df.timestamp.dt.hour.unique())
-    # Poistetaan aukioloaikojen ulkopuolella olevat ajat
-    df = df.drop(df[(df.timestamp.dt.hour < 8)].index) #dropataan kaikki 8-21 ulkopuolella olevat tunnit
+# Poistetaan aukioloaikojen ulkopuolella olevat ajat
+
+    #dropataan kaikki 8-21 ulkopuolella olevat tunnit
+    df = df.drop(df[(df.timestamp.dt.hour < 8)].index)
     df = df.drop(df[(df.timestamp.dt.hour > 21)].index)
+    
     df = df.reset_index(drop=True) # resetoidaan indexit, että voidaan ajaa uudet koodit
-    print(df.timestamp.dt.hour.unique())
         #alustetaan uusi kolumni nollalla, tähän tulee kyseinen tunti kaupassa, esimerkiksi klo 8 eli aukioloajan ensimmäinen tunti on 1
     df['current_hour'] = 0
     # Käydään läpi timestamp ja jokaikisen tunnin kohdalle lisätään yksi tunti. Aloitetaan tunnista 8
     #Koska 8-21 välillä 15 tuntia, ajetaan tämä 15 kertaa
-    for i in range(15):
-        
-        
+    for i in range(15):      
         df['current_hour'].loc[df['timestamp'].dt.hour == 8+i] = i+1
 
     #Sunnuntaina aloitetaan kaksi tuntia myöhemmin, joten vähennetään kaksi tuntia jokaisesta hetkestä
