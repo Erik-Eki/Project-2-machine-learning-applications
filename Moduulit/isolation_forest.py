@@ -50,11 +50,38 @@ def isolation_forest(df, random_state, contamination, node):
     
     #Plot results
     #plt.gca().invert_yaxis()
-    plt.scatter(df['x'],df['y'],edgecolor='black',s=15, label="Jääneet")
+    '''plt.scatter(df['x'],df['y'],edgecolor='black',s=15, label="Jääneet")
     plt.scatter(outliers['x'],outliers['y'],edgecolor='red',s=15, label="Poistetut")
     plt.ylabel("x")
     plt.ylabel("y", rotation='0')
     plt.legend()
-    plt.show()
+    plt.show()'''
     
-    return df
+    return df, outliers
+
+def plot_isolation_forest(df, outliers):
+    """[Plottaa jokaisen kauppareissun peräkkäin]
+
+     Args:
+         df_reitit ([DataFrame]): [Sisältää erotellut kauppareitit]
+         grid_size ([int]): [Gridin koko on määritelty tämän mukaan.]
+     """
+    node = df["node_id"].unique()
+    node_len = max(df["node_id"].unique())
+
+    #c = cm.flag(np.linspace(0, 1, ajot_len))
+    plt.figure(figsize=(20,15))
+
+
+    for i in range(ajot_len):
+        plt.subplot((node_len/5)+1,4,i+1)
+        plt.scatter(df['x'],df['y'],edgecolor='black',s=15, label="Jääneet")
+        plt.scatter(outliers['x'],outliers['y'],edgecolor='red',s=15, label="Poistetut")
+        plt.ylabel("x")
+        plt.ylabel("y", rotation='0')
+        plt.title(f"Node {i+1}")
+        #plt.xlim(0, 40)
+        #plt.ylim=(0, 40)
+        #plt.axis('off')
+
+    plt.show()

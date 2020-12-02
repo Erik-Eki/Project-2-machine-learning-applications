@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from collections import Counter
 sns.set();
 
 class Reitti:
@@ -52,12 +53,16 @@ def poista_lyhyet_reitit(reitit, minimi_määrä_dataa):
         [list]: [Palauttaa listan, jossa tarpeeksi datapisteitä sisältävät kauppareissut.]
     """
     clean_list = []
+    shit_list = []
     for i in range(len(reitit)):
         if len(reitit[i].node_id) > minimi_määrä_dataa:
             clean_list.append(reitit[i])
+        else:
+            shit_list.append(reitit[i])
+    print("Poistetut liian lyhyet reitit:", len(set(shit_list)))
     return clean_list
 
-        
+
 def erottele_reitit(df, in_ID, out_ID):
     """[Iteroi jokaisen dataframen rivin, tutkii milloin uusi kauppareissu alkaa ja lisää reissun tiedot sille luotuun objektiin.]
 
@@ -124,6 +129,9 @@ def reitit_dataframeksi(reitit):
                                                         "velocity_kmh":a.velocity_kmh,
                                                         "distance_grid":a.distance_grid,
                                                         "kesto":a.timestamp[-1]-a.timestamp[0] }) for a in reitit])
+    
+    print("Hyvät reitit:", len(kauppareissut['ajokerta'].unique()))
+    print(f"{'-'*30}")
     return kauppareissut
 
 def plot_all_routes(df_reitit, grid_size):
@@ -138,15 +146,40 @@ def plot_all_routes(df_reitit, grid_size):
     facet.set_yticks(np.arange(0, grid_size+1,10))
     plt.show()
 
-def plot_unique_routes(df_reitit, grid_size, in_x, in_y, out_x, out_y):
+def plot_unique_routes(df, grid_size, in_x, in_y, out_x, out_y):
     """[Plottaa jokaisen kauppareissun peräkkäin]
 
      Args:
          df_reitit ([DataFrame]): [Sisältää erotellut kauppareitit]
          grid_size ([int]): [Gridin koko on määritelty tämän mukaan.]
      """
-    
-    ajot = df_reitit["ajokerta"].unique()
+    ajot = df["ajokerta"].unique()
+    ajot_len = max(df["ajokerta"].unique())
+
+    #c = cm.flag(np.linspace(0, 1, ajot_len))
+    all_colors = [k for k,v in pltc.cnames.items()]
+
+    print("Ajokerrat: ",ajot_len)
+    if ajot_len > 10:
+        plt.figure(figsize=(20,(ajot_len/2))) # specifying the overall picture size
+    elif ajot_len < 10:
+        plt.figure(figsize=(20,ajot_len))
+
+
+    for i in range(ajot_len):
+        plt.subplot((ajot_len/5)+1,6,i+1)
+        plt.plot(df[df["ajokerta"] == i]['x'], df[df["ajokerta"] == i]['y'], color=np.random.random(3))#np.random.random(3)
+        plt.scatter(in_x, in_y, color='darkorange', marker='s', s=2)
+        plt.scatter(out_x, out_y, color='green', marker='s', s=2)
+        plt.title(f"Ajokerta {i+1}")
+        plt.xticks(fontsize=7)
+        plt.yticks(fontsize=7)
+        #plt.xlim(0, 40)
+        #plt.ylim=(0, 40)
+        #plt.axis('off')
+
+    plt.show()
+    '''ajot = df_reitit["ajokerta"].unique()
     df_reitit["color"] = np.arange(0,len(df_reitit),1)
     for ajo in ajot:
         print(len(df_reitit[df_reitit["ajokerta"] == ajo]))
@@ -157,7 +190,7 @@ def plot_unique_routes(df_reitit, grid_size, in_x, in_y, out_x, out_y):
         facet.set_xticks(np.arange(0, grid_size+1,10))
         facet.set_yticks(np.arange(0, grid_size+1,10))
         plt.legend([],[], frameon=False)
-        plt.show()
+        plt.show()'''
         
 def get_lapimeno(reitit, minimi_määrä_dataa):        
 

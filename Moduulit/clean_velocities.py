@@ -206,7 +206,7 @@ class velocity():
         """
         plt.figure(figsize=(10, 7))
         plt.plot(df_original[columnX], df_original[columnY], color="black", marker='o', linestyle='dashed', linewidth=0.2, markersize=3, label="Poistettu")
-        plt.plot(df_new[columnX], df_new[columnY],color='cyan', markeredgecolor='deeppink', marker='o',linewidth=0.2, markersize=4, markevery=3, label="Jääneet")
+        plt.plot(df_new[columnX], df_new[columnY],color='cyan', marker='o',linewidth=0.2, markersize=4, markevery=3, alpha=0.3, label="Jääneet")
         plt.ylabel("y", rotation='0')
         plt.xlabel("x")
         plt.grid()
