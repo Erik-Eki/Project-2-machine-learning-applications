@@ -62,4 +62,7 @@ def clean_dataframe(df):
     df = df[df.node_id != 27]
     df = df[df.node_id != 32]
     
+    # AINA RESET INDEX KUN DROPPAAT JOTAKI KU EI MUUTE INDEKSIT PÄIVTIY EIKÖ SANA KUULU
+    df = df.reset_index(drop=True)
+    
     return df
