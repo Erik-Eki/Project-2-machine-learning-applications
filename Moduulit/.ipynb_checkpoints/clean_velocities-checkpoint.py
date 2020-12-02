@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import math
 import matplotlib.pyplot as plt
+from collections import Counter
 
 
 class velocity():
@@ -73,29 +74,119 @@ class velocity():
             # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
             time.append(velocity.calc_timejump(df.iloc[i, time_column], df.iloc[i-1, time_column]))
             # Sama kuin ylemmässä, mutta lisätään iteroitavan y kolumnin mukaan ja laskeetaan niiden välisen pituuden
-            dist.append(velocity.calculateDistance(abs(df.iloc[i, x_column]), abs(df.iloc[i, y_column]),abs(df.iloc[i-1, x_column]), abs(df.iloc[i-1, y_column])))
+            dist.append(round(velocity.calculateDistance(abs(df.iloc[i, x_column]), abs(df.iloc[i, y_column]),abs(df.iloc[i-1, x_column]), abs(df.iloc[i-1, y_column])),1))
 
-        # Lasketaan nopeus jakamalla pituus nopeudella
+        # Lasketaan nopeus jakamalla pituus ajalla
         for i in range(len(dist)):
-            speed.append((dist[i] / 93) / time[i])
+            speed.append((dist[i] / 100) / time[i])
             #speed.append((dist[i] / 93)/time[i])
-
+        speed2 = speed
+        dist2 = dist    
+        
         x = 0
         
         # Poistetaan liiat nopeudet joko:
         # jos nopeus on liian suuri (yli 2 km/h)
         # jos on kulkenut liian pitkän matkan liian nopeasti (jos yli 100 pistettä)
         for i in speed:
-            if(i > 2 or (dist[x]/93) > 100):
+            if(i > 5.0 or (dist[x]/100) > 100):
                 df.drop([df.index[x]], axis = 0, inplace = True)
                 x -= 1
             x += 1
-
+        print("Vanha taulu: ", len(df_original))
         print("Uusi taulu: ", len(df['x'])) 
         print("Poistettuja pisteitä: ", len(df_original) - len(df))
+        total_data = len(df_original)
+        total_missing = len(df_original) - len(df)
+        percentage = (total_missing/total_data) * 100
+        percentage_remain = (1 - (total_missing/total_data)) * 100
+        print("Percent removed:   ",round(percentage, 2),'%')
+        print("Percent remaining: ",round(percentage_remain, 2),'%')
+        print(f"{'-'*30}")
+        # Luodaan taulu nopeuksista ja pituuksista
+        s = pd.Series(dist)
+        s = (s / 100).tolist()
+        new_df = pd.DataFrame(list(zip(speed, s)),columns=['velocity_kmh', 'distance_m'])
+        
+        # Yhdistetään tämä taulu syötettyyn tauluun
+        mergedDf = df.join(new_df)
+        mergedDf
+        
+        return mergedDf, speed2, dist2
+    
+    def column_vel_GRID(df, x_sarake, y_sarake, speed2, dist2):
+        """[Laskee datapisteiden välisen nopeuden]
+
+        Args:
+            df ([DataFrame]): [Taulu, jota halutaan käsitellä. Vaatii sarakkeet 'x', 'y' & 'timestamp']
+            x_sarake ([string]): [Sarake, missä x koordinaatit]
+            y_sarake ([string]): [Sarake, missä y koordinaatit]
+            
+        Returns:
+            mergedDf ([DataFrame]): [Alkuperäinen syötetty taulu, johon on lisätty 'velocity' ja 'distance' sarakkeet]
+        """
+        # Alustaa muuttujia
+        df_original = df.copy()
+        devx1 = []
+        time = []
+        dist = []
+        speed = []
+        # x ja y kolumnin indexi
+        x_column = df.columns.get_loc(x_sarake)
+        y_column = df.columns.get_loc(y_sarake)
+        # timestampin indexi
+        time_column = df.columns.get_loc('timestamp')
+        i = 1
+
+        # Iteroidaan taulukon pituuden läpi
+        for i in range(len(df[x_sarake])):
+            # Ottaa timestamp kolumnista yhden ja sitä seuraavan arvon ja laskee niiden välisen nopeuden
+            time.append(velocity.calc_timejump(df.iloc[i, time_column], df.iloc[i-1, time_column]))
+            # Sama kuin ylemmässä, mutta lisätään iteroitavan y kolumnin mukaan ja laskeetaan niiden välisen pituuden
+            dist.append(round(velocity.calculateDistance(abs(df.iloc[i, x_column]), abs(df.iloc[i, y_column]),abs(df.iloc[i-1, x_column]), abs(df.iloc[i-1, y_column])),1))
+
+        # Lasketaan nopeus jakamalla pituus ajalla
+        for i in range(len(dist)):
+            speed.append((dist[i]) / time[i])
+            #speed.append((dist[i] / 93)/time[i])
+        #print([speed.count(x) for x in set(speed)])
+        #print(Counter(speed))
+        speed = speed2
+        dist = dist2
+        
+        x = 0
+        # Poistetaan liiat nopeudet joko:
+        # jos nopeus on liian suuri (yli 2 km/h)
+        # jos on kulkenut liian pitkän matkan liian nopeasti (jos yli 100 pistettä)
+        '''for i in speed:
+            #print(x)
+            if(i > 5.0 or dist[x] > 10.0):
+                df['Deleted']=df.index[x]==True
+                df.drop([df.index[x]], axis=0, inplace = True)
+                #print("Piste poistettud")
+                x -= 1
+            else:
+                df['Deleted']=df.index[x]==False
+                x -= 1
+            x += 1'''
+        for i in speed:
+            if(i > 5.0 or dist[x] > 10):
+                df.drop([df.index[x]], axis = 0, inplace = True)
+                x -= 1
+            x += 1
+        print("Vanha taulu: ", len(df_original))
+        print("Uusi taulu: ", len(df['x'])) 
+        print("Poistettuja pisteitä: ", len(df_original) - len(df))
+        total_data = len(df_original)
+        total_missing = len(df_original) - len(df)
+        percentage = (total_missing/total_data) * 100
+        percentage_remain = (1 - (total_missing/total_data)) * 100
+        print("Percent removed:   ",round(percentage, 2),'%')
+        print("Percent remaining: ",round(percentage_remain, 2),'%')
+        print(f"{'-'*30}")
         
         # Luodaan taulu nopeuksista ja pituuksista
-        new_df = pd.DataFrame(list(zip(speed, dist)),columns=['velocity', 'distance'])
+        new_df = pd.DataFrame(list(zip(speed, dist)),columns=['velocity_kmh', 'distance_m'])
         
         # Yhdistetään tämä taulu syötettyyn tauluun
         mergedDf = df.join(new_df)
@@ -115,7 +206,7 @@ class velocity():
         """
         plt.figure(figsize=(10, 7))
         plt.plot(df_original[columnX], df_original[columnY], color="black", marker='o', linestyle='dashed', linewidth=0.2, markersize=3, label="Poistettu")
-        plt.plot(df_new[columnX], df_new[columnY],color='cyan', marker='o',linewidth=0.2, markersize=2, markevery=3, label="Jääneet", alpha=0.3)
+        plt.plot(df_new[columnX], df_new[columnY],color='cyan', markeredgecolor='deeppink', marker='o',linewidth=0.2, markersize=4, markevery=3, label="Jääneet")
         plt.ylabel("y", rotation='0')
         plt.xlabel("x")
         plt.grid()
