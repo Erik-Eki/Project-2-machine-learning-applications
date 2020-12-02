@@ -37,8 +37,8 @@ class Reitti:
         self.ID.append(ID)
         self.x.append(x)
         self.y.append(y)
-        self.vel.append(vel)
-        self.dist.append(dist)
+        self.velocity_kmh.append(vel)
+        self.distance_grid.append(dist)
 
 
 def poista_lyhyet_reitit(reitit, minimi_määrä_dataa):
