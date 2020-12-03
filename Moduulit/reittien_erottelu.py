@@ -98,7 +98,7 @@ def erottele_reitit(df, in_ID, out_ID):
             matkalla = False
         
         elif matkalla == True:
-            erotellut_reitit[ajokerta].lisaa(ajokerta, row.timestamp,row.node_id,row.grid_id, row.x_grid, row.y_grid)
+            erotellut_reitit[ajokerta].lisaa(ajokerta, row.node_id,row.timestamp,row.grid_id, row.x_grid, row.y_grid)
     
     return erotellut_reitit
 
@@ -116,7 +116,7 @@ def reitit_dataframeksi(reitit):
     kauppareissut = pd.DataFrame(None,None,None,None,None)
     # käysään kaikki reittiobjektit läpi ja muodostetaan lisätään ne vuorollaan dataframeen.
     reitt = []
-    kauppareissut = kauppareissut.append([pd.DataFrame({"ajokerta":a.ajokerta, "node_id":a.node_id, "timestamp":a.timestamp, "x":a.x, "y":a.y,"grid_id":a.ID, "kesto":a.node_id[-1]-a.node_id[0]}) for a in reitit])
+    kauppareissut = kauppareissut.append([pd.DataFrame({"ajokerta":a.ajokerta, "node_id":a.node_id, "timestamp":a.timestamp, "x":a.x, "y":a.y,"grid_id":a.ID, "kesto":a.timestamp[-1]-a.timestamp[0]}) for a in reitit])
     return kauppareissut
 
 
@@ -161,9 +161,9 @@ def get_lapimeno(reitit, minimi_määrä_dataa):
 
     
     for i in range(len(reitit)):
-        if len(reitit[i].timestamp) > minimi_määrä_dataa:
-            alotus = reitit[i].node_id[0]
-            lopetus = reitit[i].node_id[-1]
+        if len(reitit[i].node_id) > minimi_määrä_dataa:
+            alotus = reitit[i].timestamp[0]
+            lopetus = reitit[i].timestamp[-1]
             lapimenoaika = (lopetus - alotus)
             alo.append(alotus)
             lapimenoajat.append(lapimenoaika)  #For looppi missä saadaan luotua läpimenoajat kärryille
