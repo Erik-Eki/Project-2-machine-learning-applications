@@ -7,7 +7,7 @@ def nopeudet(df):
     df['distancex'] = df['x'].diff()
     df['distancey'] = df['y'].diff()
     df['distance'] = (df['distancex']**2 + df['distancey']**2)
-    df['distance'] = (np.sqrt(df['distance'])/161.15)
+    df['distance'] = (np.sqrt(df['distance'])/100)
 
     df = df.drop('distancex', 1)
     df = df.drop('distancey', 1)
