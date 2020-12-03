@@ -16,9 +16,13 @@ class Reitti:
         self.x = []
         self.y = []
         self.ID = []
+        self.weekday = []
+        self.hour = []
+        self.velocity_kmh = []
+        self.distance_grid = []
       
         
-    def lisaa(self,ajokerta, node_id, timestamp, ID, x, y):
+    def lisaa(self,ajokerta, node_id, timestamp, ID, x, y, weekday, hour, vel, dist):
         """[Lisätään kerättävät tiedot objektin listoihin.]
 
         Args:
@@ -35,6 +39,10 @@ class Reitti:
         self.ID.append(ID)
         self.x.append(x)
         self.y.append(y)
+        self.weekday.append(weekday)
+        self.hour.append(hour)
+        self.velocity_kmh.append(vel)
+        self.distance_grid.append(dist)
 
 
 def poista_lyhyet_reitit(reitit, minimi_määrä_dataa):
@@ -95,7 +103,7 @@ def erottele_reitit(df, in_ID, out_ID):
             matkalla = False
         
         elif matkalla == True:
-            erotellut_reitit[ajokerta].lisaa(ajokerta,row.node_id, row.timestamp,row.grid_id, row.x_grid, row.y_grid)
+            erotellut_reitit[ajokerta].lisaa(ajokerta,row.node_id, row.timestamp,row.grid_id, row.x_grid, row.y_grid, row.dayofweek, row.current_hour, row.velocity_kmh, row.distance_grid)
     
     return erotellut_reitit
 
@@ -109,9 +117,7 @@ def reitit_dataframeksi(reitit):
         [DataFrame]: [Palauttaa Dataframen, joka sisältää jokaisen datasta erotellun kauppareissun.]
     """
 
-    kauppareissut = pd.DataFrame(None,None,None,None,None)
-    reitt = []
-    kauppareissut = kauppareissut.append([pd.DataFrame({"ajokerta":a.ajokerta, "node_id":a.node_id, "timestamp":a.timestamp, "x":a.x, "y":a.y,"grid_id":a.ID, "kesto":a.timestamp[-1]-a.timestamp[0] }) for a in reitit])
+    kauppareissut = pd.concat([pd.DataFrame({"ajokerta":a.ajokerta, "node_id":a.node_id, "timestamp":a.timestamp, "x":a.x, "y":a.y,"grid_id":a.ID, "velocity_kmh":a.velocity_kmh,"distance_grid":a.distance_grid, "kesto":a.timestamp[-1]-a.timestamp[0], "dayofweek":a.weekday, "current_hour":a.hour}) for a in reitit])
     return kauppareissut
 
 def plot_all_routes(df_reitit, grid_size):
