@@ -1,8 +1,11 @@
 from ipywidgets import interact, interactive, fixed, interact_manual, Layout
+from database_connection import *
 import ipywidgets as widgets
 import pandas as pd
 
 
+OptTables = database_query("SHOW Tables;")
+OptTables = OptTables.Tables_in_iiwari_org.values
  # Tunnit widgettien vaihtoehdoiksi
 OptHours = list(range(8, 23))
 
