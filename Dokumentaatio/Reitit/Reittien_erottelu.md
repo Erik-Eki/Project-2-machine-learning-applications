@@ -7,10 +7,11 @@ Moduulissa olevalla luokalla ja funktioilla saadaan erotettua yksittäiset kaupp
 
 
 ## Edellytykset 
-- Dataframen täytyy olla diskretioisu [xy_diskretiointi]()-moduulilla, jotta se sisältää grid_id-sarakkeen.
-- Diskretioidusta datasta täytyy olla etsittynä kaupan [sisäänkäynnin sekä kassojen]() koordinaatit. Näiden koordinaattien pohjalta luodaan kummallekkin alueelle omat listat, joihin lisätään [ID-arvoiksi]() muutetut sijainnit.
+- Dataframen täytyy olla diskretioisu [xy_diskretiointi](https://gitlab.dclabra.fi/ryhm-fox/projekti-2-team-fox/-/blob/master/Dokumentaatio/Gridin%20karkeuden%20etsiminen/XY_Diskretisointi.md)-moduulilla, jotta se sisältää grid_id-sarakkeen.
+- Diskretioidusta datasta täytyy olla etsittynä kaupan [sisäänkäynnin sekä kassojen](https://gitlab.dclabra.fi/ryhm-fox/projekti-2-team-fox/-/blob/master/Dokumentaatio/Data-analyysi/Sis%C3%A4%C3%A4n_ja_ulosk%C3%A4ynnit.md) koordinaatit. Näiden koordinaattien pohjalta luodaan kummallekkin alueelle omat listat, joihin lisätään [ID-arvoiksi]() muutetut sijainnit.
 
 Käytettävä dataframe näyttää aluksi tältä:
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_634b03edd9adf02072eabf1b7f1fab75.png)
 
 
@@ -63,19 +64,7 @@ class Reitti:
         self.ID.append(ID)
         self.x.append(x)
         self.y.append(y)
-        
-    def yhdista_tiedot(self):
-        """[Luo Dictionaryn, johon yhdistetään kaikki objektiin tallennettu data, jotta objektin sisältävä data saadaan helposti Pandasin DataFrame -muotoon. 
-        Data yhdistetään, kun kaikki kauppareissuun kuuluva data on saatu kerättyä.
-        .
-        ]
-        """
-        self.tiedot = {"ajokerta": self.ajokerta,
-                   "timestamp": self.node_id,
-                   "node_id": self.timestamp,
-                   "ID": self.ID,
-                   "x":self.x,
-                   "y":self.y}
+
 ```
 
 ## Datan lisääminen Reitti-objektiin.
@@ -92,9 +81,7 @@ class Reitti:
 
 Tällä tavalla saadaan tarkasti erotettua kauppareissut toisistaan, mutta menetelmä on verrattain hidas.
 
-
 ```
-
 def erottele_reitit(df, in_ID, out_ID):
     """[Iteroi jokaisen dataframen rivin, tutkii milloin uusi kauppareissu alkaa ja lisää reissun tiedot sille luotuun objektiin.]
 
@@ -180,18 +167,15 @@ def reitit_dataframeksi(reitit):
         [DataFrame]: [Palauttaa Dataframen, joka sisältää jokaisen datasta erotellun kauppareissun.]
     """
 
-
     kauppareissut = pd.DataFrame(None,None,None,None,None)
-    # käysään kaikki reittiobjektit läpi ja muodostetaan lisätään ne vuorollaan dataframeen.
-    for kauppareissu in reitit:
-        kauppareissu.yhdista_tiedot()
-        reitti = pd.DataFrame(kauppareissu.tiedot)
-        # Lisätään kaikki ajokerrat vuorollaan dataframeen.
-        kauppareissut = kauppareissut.append(reitti,  ignore_index=True)
+    reitt = []
+    kauppareissut = kauppareissut.append([pd.DataFrame({"ajokerta":a.ajokerta, "node_id":a.node_id, "timestamp":a.timestamp, "x":a.x, "y":a.y,"grid_id":a.ID}) for a in reitit])
     return kauppareissut
+
 ```
 
 Yksittäisistä kauppareiteista muodostettu dataframe näyttää tältä:
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_4b9d2fd5db22b116b92ada65d6bd8587.png)
 
 ### Reittien visualisoiminen
@@ -211,6 +195,7 @@ def plot_all_routes(df_reitit, grid_size):
     facet.set_yticks(np.arange(0, grid_size+1,10))
     plt.show()
 ```
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_06be2ff0795b3b9a3356af64a197bd99.png)
 
 Kaikki reitit saadaan myös visualisoitua yksitellen. Kuvaajassa näkyy myös sisäänkäynti- ja kassa-alueet.
@@ -235,6 +220,7 @@ def plot_unique_routes(df_reitit, grid_size, in_x, in_y, out_x, out_y):
         plt.legend([],[], frameon=False)
         plt.show()
 ```
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_9ecccc13a5b300de55812a26aae3e8c7.png)
 
 ### Tilastoja
@@ -242,17 +228,21 @@ def plot_unique_routes(df_reitit, grid_size, in_x, in_y, out_x, out_y):
 DataFrameen on haettu kaikki data tietokannasta (13890906 rows × 6 columns)
 
 Datasta on poistettu outlierit Z-Scorella:
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_dd65d47842690692cd8862caeef46118.png)
 
 Datasta on poistettu aukioloaikojen ulkpuoliset rivit, jonka jälkeen dataa on:
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_af453b5934fa00562e83feaeaf6847e6.png)
 
 Reittien erottelun ja alle 50 riviä sisältävien reittien poistamisen jälkeen dataa on jäljellä:
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_09c4c70373a20b0213ef094936316eba.png)
 
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_496367a3cf5aab4304b363c6e22c489c.png)
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_6f877d1f108628e529acaef7f750200b.png)
 
 Reittien erotteluun kului aikaa:
-![](https://gitlab.dclabra.fi/wiki/uploads/upload_8f920c2c354b7cb160eaa43c20c945a3.png)
 
-Eroteltuja kauppareissuja löytyi: 8602 kpl
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_6b3ef2cf908213a21c5289069dfd22c8.png)
+
+Eroteltuja kauppareissuja löytyi: 8788 kpl
