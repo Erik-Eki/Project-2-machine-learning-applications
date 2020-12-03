@@ -1,3 +1,7 @@
+import pandas as pd
+import numpy as np
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
 def df_to_features(df):
     df["check"] = df["ajokerta"].shift(1)
     uniques = df["ajokerta"].unique()
@@ -20,7 +24,7 @@ def df_to_features(df):
     return pd.DataFrame(rivit)
 
 def ideal_k(df):
-    from sklearn.cluster import KMeans
+
     ideal_k = []
     for i in range(1,10,1):
         est_kmeans = KMeans(n_clusters=i)
