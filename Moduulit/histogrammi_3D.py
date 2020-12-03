@@ -1,6 +1,9 @@
+import numpy as np
 from mpl_toolkits.mplot3d.axes3d import Axes3D
+import matplotlib.pyplot as plt
+from matplotlib import cm
 
-def draw_3d(df, ID):
+def draw_3d(df, ID, u_in_ID, u_out_ID):
     df1 = df[~df[ID].isin(u_in_ID)]
     df1 = df1[~df1[ID].isin(u_out_ID)]
 
