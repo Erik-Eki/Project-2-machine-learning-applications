@@ -3,7 +3,7 @@ from matplotlib import colors
 
 def sisään(df, x, y):
     grid_size = max(df[x])+1
-    min_x = 0.65 * grid_size
+    min_x = 0.58 * grid_size
     max_x = 0.83 * grid_size
     min_y = 0 * grid_size
     max_y = 0.35 * grid_size
@@ -16,7 +16,7 @@ def sisään(df, x, y):
 def ulos(df, x, y):
     grid_size = max(df[y])+1
     min_x = 0.3 * grid_size
-    max_x = 0.55 * grid_size
+    max_x = 0.56 * grid_size
     min_y = 0 * grid_size
     max_y = 0.38 * grid_size
     
