@@ -24,7 +24,7 @@ def nopeudet(df):
 
 
     # Poistetaan liian nopeat, yli 7km/h
-    df = df.drop(df[(df.speedkm > 7)].index)
+#     df = df.drop(df[(df.speedkm > 7)].index)
     
     df = df.dropna()
     df
