@@ -14,7 +14,7 @@ def df_to_features(df):
 
                 rivit.append({"ajokerta":row.ajokerta, "node_id":row.node_id, 
                               "kesto":row.kesto, "dayofweek":row.dayofweek, 
-                              "current_hour":row.current_hour, 
+                              "current_hour":row.current_hour, "distance":row.distance, 
                               "0":idt[0], "1":idt[1], "2":idt[2], "3":idt[3],
                               "4":idt[4], "5":idt[5], "6":idt[6], "7":idt[7],
                               "8":idt[8], "9":idt[9], "10":idt[10], "11":idt[11],
