@@ -111,5 +111,5 @@ def draw_histogram(x, y, bin_num):
     plt.legend()
     # Tweak spacing to prevent clipping of ylabel
     plt.tight_layout()
-    plt.savefig('outliers-histogram.jpg')
+    #plt.savefig('outliers-histogram.jpg')
     plt.show()
