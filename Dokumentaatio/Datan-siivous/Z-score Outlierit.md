@@ -298,3 +298,9 @@ Myöskään outliereita ei löydy z-score tekniikalla paljoa, eli tämä voisi o
 Kuvaajasta voidaan päätellä jo kaupan suhteellinen muoto. Siitä myös näkee, missä eniten vääränlaisia tietoja syntyy.
 Tuo "uloke" vasemmalla saattaisikin olla kaupan ulkopuolella oleva kärriparkki.
 Mutta mitään ei voi olettaa ennenkuin saadaan käsiin pohjapiirrustus.
+
+(Plus: Kuinka pitkään meni suorittaa koko datalla:)
+```
+CPU times: user 25.3 s, sys: 807 ms, total: 26.2 s
+Wall time: 26.1 s
+```
