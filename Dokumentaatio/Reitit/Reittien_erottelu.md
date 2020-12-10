@@ -157,6 +157,7 @@ def poista_lyhyet_reitit(reitit, minimi_määrä_dataa):
 Kun kaikki data on saatu eristettyä omiksi reiteiksi, voidaan jokainen reitti-objekti käydä yksitellen läpi, ja yhdistää sen sisältämät tiedot omaksi dictionaryksi. Jokaisen objektin dictionarystä muodostetaan vuorollaan DataFrame, joka lisätään yhteen isoon DataFrameen, joka lopulta sisältää kaikkien reitti-objektien datat.
 
 ```
+
 def reitit_dataframeksi(reitit):
     """[Luo dataframen, joka sisältää kaikkien kauppareissujen tiedot.]
 
@@ -167,9 +168,7 @@ def reitit_dataframeksi(reitit):
         [DataFrame]: [Palauttaa Dataframen, joka sisältää jokaisen datasta erotellun kauppareissun.]
     """
 
-    kauppareissut = pd.DataFrame(None,None,None,None,None)
-    reitt = []
-    kauppareissut = kauppareissut.append([pd.DataFrame({"ajokerta":a.ajokerta, "node_id":a.node_id, "timestamp":a.timestamp, "x":a.x, "y":a.y,"grid_id":a.ID}) for a in reitit])
+    kauppareissut = pd.concat([pd.DataFrame({"ajokerta":a.ajokerta, "node_id":a.node_id, "timestamp":a.timestamp, "x":a.x, "y":a.y,"grid_id":a.ID, "kesto":a.timestamp[-1]-a.timestamp[0], "dayofweek":a.weekday, "current_hour":a.hour}) for a in reitit])
     return kauppareissut
 
 ```
