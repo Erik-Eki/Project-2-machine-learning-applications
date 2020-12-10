@@ -10,6 +10,8 @@ def clean_dataframe(df):
     df['timestamp'] = df['timestamp'].str.slice(2, -7)
     df['timestamp'] = df['timestamp'].astype('datetime64[ns]')
     
+    #df["timestamp"] = df.timestamp.apply(lambda x:str(x).slice(2,-7).astype('datetime64[ns]'))
+    
     # Round ms
     df.timestamp = df.timestamp.dt.round("ms")
     df.timestamp = df.timestamp.dt.tz_localize('UTC')
