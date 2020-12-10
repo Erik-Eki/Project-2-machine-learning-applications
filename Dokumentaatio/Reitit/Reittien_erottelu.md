@@ -7,8 +7,8 @@ Moduulissa olevalla luokalla ja funktioilla saadaan erotettua yksittäiset kaupp
 
 
 ## Edellytykset 
-- Dataframen täytyy olla diskretioisu [xy_diskretiointi](https://gitlab.dclabra.fi/ryhm-fox/projekti-2-team-fox/-/blob/master/Dokumentaatio/Gridin%20karkeuden%20etsiminen/XY_Diskretisointi.md)-moduulilla, jotta se sisältää grid_id-sarakkeen.
-- Diskretioidusta datasta täytyy olla etsittynä kaupan [sisäänkäynnin sekä kassojen](https://gitlab.dclabra.fi/ryhm-fox/projekti-2-team-fox/-/blob/master/Dokumentaatio/Data-analyysi/Sis%C3%A4%C3%A4n_ja_ulosk%C3%A4ynnit.md) koordinaatit. Näiden koordinaattien pohjalta luodaan kummallekkin alueelle omat listat, joihin lisätään [ID-arvoiksi]() muutetut sijainnit.
+- Dataframen täytyy olla diskretioisu [xy_diskretiointi](https://gitlab.dclabra.fi/ryhm-fox/projekti-2-team-fox/-/blob/master/Moduulit/xy_diskretisointi.py)-moduulilla, jotta se sisältää grid_id-sarakkeen.
+- Diskretioidusta datasta täytyy olla etsittynä kaupan [sisäänkäynnin sekä kassojen](https://gitlab.dclabra.fi/ryhm-fox/projekti-2-team-fox/-/blob/master/Dokumentaatio/Data-analyysi/Sis%C3%A4%C3%A4n_ja_ulosk%C3%A4ynnit.md) koordinaatit. Näiden koordinaattien pohjalta luodaan kummallekkin alueelle omat listat, joihin lisätään ID-arvoiksi muutetut sijainnit.
 
 Käytettävä dataframe näyttää aluksi tältä:
 
