@@ -28,12 +28,15 @@ class velocity():
         df['ero'] = df['timestamp'].diff()
         df['ero'] = df.ero.dt.seconds                   
 
-        df['speedkm'] = df['distance']/df['ero']*3.6
+        df['speed_kmh'] = df['distance']/df['ero']*3.6
 
 
         # Poistetaan liian nopeat, yli 7km/h
-
         df = df.dropna()
+        print(df)
+        
+        df = df[df['speed_kmh'] < 7.0]
+        df = df[df['distance'] < 100]
         
         # Poistetaan liiat nopeudet joko:
         # jos nopeus on liian suuri (yli 2 km/h)
@@ -45,7 +48,8 @@ class velocity():
             if(i > 5.0 or (dist[x]/100) > 100):
                 df.drop([df.index[x]], axis = 0, inplace = True)
                 x -= 1
-            x += 1'''
+            x += 1
+        '''
         print("Vanha taulu: ", len(df_original))
         print("Uusi taulu: ", len(df['x'])) 
         print("Poistettuja pisteitä: ", len(df_original) - len(df))
