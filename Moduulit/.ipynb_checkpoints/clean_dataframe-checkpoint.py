@@ -22,10 +22,25 @@ def clean_dataframe(df):
     df['timestamp'] = df['timestamp'].str.slice(0, -7)
     df['timestamp'] = df['timestamp'].astype('datetime64[ns]')
     
-    # Poistetaan aukioloaikojen ulkopuolella olevat ajat
-    df = df.drop(df[(df.timestamp.dt.hour < 8)].index) #dropataan kaikki 8-21 ulkopuolella olevat tunnit
+    # viikonpäiväkolumni
+    df['dayofweek'] = df.timestamp.dt.dayofweek
+
+# Poistetaan aukioloaikojen ulkopuolella olevat ajat
+
+    #dropataan kaikki 8-21 ulkopuolella olevat tunnit
+    df = df.drop(df[(df.timestamp.dt.hour < 8)].index)
     df = df.drop(df[(df.timestamp.dt.hour > 21)].index)
+    
     df = df.reset_index(drop=True) # resetoidaan indexit, että voidaan ajaa uudet koodit
+        #alustetaan uusi kolumni nollalla, tähän tulee kyseinen tunti kaupassa, esimerkiksi klo 8 eli aukioloajan ensimmäinen tunti on 1
+    df['current_hour'] = 0
+    # Käydään läpi timestamp ja jokaikisen tunnin kohdalle lisätään yksi tunti. Aloitetaan tunnista 8
+    #Koska 8-21 välillä 15 tuntia, ajetaan tämä 15 kertaa
+    for i in range(15):      
+        df['current_hour'].loc[df['timestamp'].dt.hour == 8+i] = i+1
+
+    #Sunnuntaina aloitetaan kaksi tuntia myöhemmin, joten vähennetään kaksi tuntia jokaisesta hetkestä
+    df['current_hour'].loc[df['timestamp'].dt.dayofweek == 6] = df['current_hour'].loc[df['timestamp'].dt.dayofweek == 6] - 2
     
     # Suodatetaan Sunnuntaitten aukioloajat
     df_temp = df[df.timestamp.dt.dayofweek == 6].index.values.tolist()
@@ -38,5 +53,22 @@ def clean_dataframe(df):
     
     # Drop z and q columns
     df = df.drop(columns=['z','q'])
+    
+    # Poistetaan huonot nodet
+    df = df[df.node_id != 13]
+    df = df[df.node_id != 14]
+    df = df[df.node_id != 18]
+    df = df[df.node_id != 27]
+    df = df[df.node_id != 32]
+    
+    df = df[df.kesto > 60]
+    
+    
+    
+    # AINA RESET INDEX KUN DROPPAAT JOTAKI KU EI MUUTE INDEKSIT PÄIVTIY EIKÖ SANA KUULU
+    df = df.reset_index(drop=True)
+    
+    
+    
     
     return df
