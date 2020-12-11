@@ -12,7 +12,7 @@ def df_to_features(df):
             if len(df[df["ajokerta"] == row.ajokerta]["grid_id"].unique()) > 25:
                 idt = np.array(df[df["ajokerta"] == row.ajokerta]["grid_id"].value_counts().keys().tolist()[:25])
 
-                rivit.append({"ajokerta":row.ajokerta, "node_id":row.node_id, 
+                rivit.append({"ajokerta":row.ajokerta, "node_id":row.node_id,"grid_id":row.grid_id, "time":row.time, 
                               "kesto":row.kesto, "dayofweek":row.dayofweek, 
                               "current_hour":row.current_hour, "distance":row.distance, 
                               "0":idt[0], "1":idt[1], "2":idt[2], "3":idt[3],

@@ -6,6 +6,72 @@ from collections import Counter
 
 
 class velocity():
+    def clean_vel(df, x_sarake, y_sarake):
+        df_original = df.copy()
+        df['distancex'] = df[x_sarake].diff()
+        df['distancey'] = df[y_sarake].diff()
+        df['distance'] = (df['distancex']**2 + df['distancey']**2)
+        df['distance'] = (np.sqrt(df['distance'])/100)
+        
+        
+        
+        
+        np.sqrt(df['distance'])/100
+
+        
+        
+        
+        df = df.drop('distancex', 1)
+        df = df.drop('distancey', 1)
+
+
+        df['ero'] = df['timestamp'].diff()
+        df['ero'] = df.ero.dt.seconds                   
+
+        df['speed_kmh'] = df['distance']/df['ero']*3.6
+
+
+        # Poistetaan liian nopeat, yli 7km/h
+        df = df.dropna()
+        print(df)
+        
+        df = df[df['speed_kmh'] < 7.0]
+        df = df[df['distance'] < 100]
+        
+        # Poistetaan liiat nopeudet joko:
+        # jos nopeus on liian suuri (yli 2 km/h)
+        # jos on kulkenut liian pitkän matkan liian nopeasti (jos yli 100 pistettä)
+        '''speed = df['speedkm'].values
+        dist = df['distance'].values
+        x = 0
+        for i in speed:
+            if(i > 5.0 or (dist[x]/100) > 100):
+                df.drop([df.index[x]], axis = 0, inplace = True)
+                x -= 1
+            x += 1
+        '''
+        print("Vanha taulu: ", len(df_original))
+        print("Uusi taulu: ", len(df['x'])) 
+        print("Poistettuja pisteitä: ", len(df_original) - len(df))
+        total_data = len(df_original)
+        total_missing = len(df_original) - len(df)
+        percentage = (total_missing/total_data) * 100
+        percentage_remain = (1 - (total_missing/total_data)) * 100
+        print("Percent removed:   ",round(percentage, 2),'%')
+        print("Percent remaining: ",round(percentage_remain, 2),'%')
+        print(f"{'-'*30}")
+        # Luodaan taulu nopeuksista ja pituuksista
+        #s = pd.Series(dist)
+        #s = (s / 100).tolist()
+        #new_df = pd.DataFrame(list(zip(speed, s)),columns=['velocity_kmh', 'distance_m'])
+        
+        # Yhdistetään tämä taulu syötettyyn tauluun
+        #mergedDf = df.join(new_df)
+        #mergedDf
+        
+        return df
+
+    '''
     """[Luokalla "velocity" on 4 funktiota: calc_timejump, calculateDistance, column_vel & draw_vel]
     """
     # Nopeuden laskun funktio
@@ -83,36 +149,7 @@ class velocity():
         speed2 = speed
         dist2 = dist    
         
-        x = 0
-        
-        # Poistetaan liiat nopeudet joko:
-        # jos nopeus on liian suuri (yli 2 km/h)
-        # jos on kulkenut liian pitkän matkan liian nopeasti (jos yli 100 pistettä)
-        for i in speed:
-            if(i > 5.0 or (dist[x]/100) > 100):
-                df.drop([df.index[x]], axis = 0, inplace = True)
-                x -= 1
-            x += 1
-        print("Vanha taulu: ", len(df_original))
-        print("Uusi taulu: ", len(df['x'])) 
-        print("Poistettuja pisteitä: ", len(df_original) - len(df))
-        total_data = len(df_original)
-        total_missing = len(df_original) - len(df)
-        percentage = (total_missing/total_data) * 100
-        percentage_remain = (1 - (total_missing/total_data)) * 100
-        print("Percent removed:   ",round(percentage, 2),'%')
-        print("Percent remaining: ",round(percentage_remain, 2),'%')
-        print(f"{'-'*30}")
-        # Luodaan taulu nopeuksista ja pituuksista
-        s = pd.Series(dist)
-        s = (s / 100).tolist()
-        new_df = pd.DataFrame(list(zip(speed, s)),columns=['velocity_kmh', 'distance_m'])
-        
-        # Yhdistetään tämä taulu syötettyyn tauluun
-        mergedDf = df.join(new_df)
-        mergedDf
-        
-        return mergedDf, speed2, dist2
+        x = 0'''
     
     def column_vel_GRID(df, x_sarake, y_sarake, speed2, dist2):
         """[Laskee datapisteiden välisen nopeuden]

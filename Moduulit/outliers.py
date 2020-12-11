@@ -14,13 +14,13 @@ def find_outliers(df):
     print(f"{'-'*30}\nUnique values in columns\n")
     print("uniques in x",len(df['x'].unique()))
     print("uniques in y",len(df['y'].unique()))
-    print("uniques in z",len(df['z'].unique()))
-    print("uniques in q",len(df['q'].unique()))
+    #print("uniques in z",len(df['z'].unique()))
+    #print("uniques in q",len(df['q'].unique()))
 
 
     print(f"{'-'*30}\nChecking z and q columns\n")
-    print("uniques in z",df['z'].unique())
-    print("uniques in q",df['q'].unique())
+    #print("uniques in z",df['z'].unique())
+    #print("uniques in q",df['q'].unique())
 
 
     # Checking how many different nodes
