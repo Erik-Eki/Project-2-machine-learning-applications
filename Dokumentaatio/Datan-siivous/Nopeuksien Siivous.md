@@ -39,7 +39,7 @@ Poistettuja pisteitä:  50
 
 ---
 
-# clean_velocities funktio
+# Vanha clean_velocities funktio
 
 Kuva kertoo enemmän kuin tuhat sanaa ja koodi on kommentoitu.
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_3d2af79897d4542ce54a3b54861309d5.png)
@@ -155,6 +155,51 @@ Yksi node ei vain järkevästi voisi liikkua puolessa sekunnissa yli 100 pistett
             x += 1
 ```
 
+# Uusi clean_velocities funktio
+HUOM: Koska kaikki tuo ylempi koodi onkin aivan liian hidas, muutettiin koodia huomattavasti optimaallisimmaksi:
+```python
+def clean_vel(df, x_sarake, y_sarake):
+
+        df_original = df.copy()
+        # Laskee differentiaalin rivien välillä
+        df['distancex'] = df[x_sarake].diff()
+        df['distancey'] = df[y_sarake].diff()
+
+        # Laskee euklidisen normin sqrt(x * x + y * y) Tämä on vektorin pituus origosta pisteeseen
+        df['distance'] = (df['distancex']**2 + df['distancey']**2)
+        df['distance'] = (np.sqrt(df['distance'])/100)
+        np.sqrt(df['distance'])/100
+
+        # Pudottaa temp sarakkeet
+        df = df.drop('distancex', 1)
+        df = df.drop('distancey', 1)
+
+        # laskee timestamppien differences
+        df['ero'] = df['timestamp'].diff()
+        df['ero'] = df.ero.dt.seconds                   
+        # Laskee nopeuden
+        df['speed_kmh'] = df['distance']/df['ero']*3.6
+
+
+        # Poistetaan liian nopeat, yli 7km/h
+        df = df.dropna()
+        print(df)
+        
+        df = df[df['speed_kmh'] < 7.0]
+        df = df[df['distance'] < 100]
+
+        print("Vanha taulu: ", len(df_original))
+        print("Uusi taulu: ", len(df['x'])) 
+        print("Poistettuja pisteitä: ", len(df_original) - len(df))
+        total_data = len(df_original)
+        total_missing = len(df_original) - len(df)
+        percentage = (total_missing/total_data) * 100
+        percentage_remain = (1 - (total_missing/total_data)) * 100
+        print("Percent removed:   ",round(percentage, 2),'%')
+        print("Percent remaining: ",round(percentage_remain, 2),'%')
+        print(f"{'-'*30}")
+```
+
 Tulostetaan poistettujen pisteiden määrä ja luodaan syötettyyn tauluu uudet sarakkeet:
 - Velocity
 - Distance
@@ -203,7 +248,9 @@ Poistettuja pisteitä:  123420
 
 ---
 # Konkluusio
-Algorytmi on siis **TOSI** hidas. **Miljoonalla** datapisteellä, sillä kesti **2 TUNTIA** käydä data läpi ja siivota se.
+Vanha algorytmi on siis **TOSI** hidas. **Miljoonalla** datapisteellä, sillä kesti **2 TUNTIA** käydä data läpi ja siivota se.
+
+**Uusi algorytmi** on PALJON nopeampi
 
 Loppujen lopuksi näyttää toimineen: Epärealistisia nopeuksia oli 16% datasta ja suurin osa näyttääkin olevan oletettavien "seinien" ja hyllyjen ulkopuolelle ja yli hyppineet pisteet.
 
