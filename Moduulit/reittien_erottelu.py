@@ -16,9 +16,13 @@ class Reitti:
         self.x = []
         self.y = []
         self.ID = []
+        self.weekday = []
+        self.hour = []
+        self.velocity_kmh = []
+        self.distance_grid = []
       
         
-    def lisaa(self,ajokerta, node_id, timestamp, ID, x, y):
+    def lisaa(self,ajokerta, node_id, timestamp, ID, x, y, weekday, hour, vel, dist):
         """[Lisätään kerättävät tiedot objektin listoihin.]
 
         Args:
@@ -35,16 +39,11 @@ class Reitti:
         self.ID.append(ID)
         self.x.append(x)
         self.y.append(y)
-        
-    def yhdista_tiedot(self):
-        """[Luo Dictionaryn, johon yhdistetään kaikki objektiin tallennettu data.]
-        """
-        self.tiedot = {"ajokerta": self.ajokerta,
-                   "timestamp": self.node_id,
-                   "node_id": self.timestamp,
-                   "ID": self.ID,
-                   "x":self.x,
-                   "y":self.y}
+        self.weekday.append(weekday)
+        self.hour.append(hour)
+        self.velocity_kmh.append(vel)
+        self.distance_grid.append(dist)
+
 
 def poista_lyhyet_reitit(reitit, minimi_määrä_dataa):
     """[Poistaa kauppareissut, joissa annettua arvoa pienempi määrä dataa.]
@@ -62,67 +61,50 @@ def poista_lyhyet_reitit(reitit, minimi_määrä_dataa):
             clean_list.append(reitit[i])
     return clean_list
 
-def get_lapimeno(reitit, minimi_määrä_dataa):        
-
-    alo = []
-    lapimenoajat = [] #Luodaan pari uutta listaa
-        
-
-    
-    for i in range(len(reitit)):
-        if len(reitit[i].timestamp) > minimi_määrä_dataa:
-            alotus = reitit[i].node_id[0]
-            lopetus = reitit[i].node_id[-1]
-            lapimenoaika = (lopetus - alotus)
-            alo.append(alotus)
-            lapimenoajat.append(lapimenoaika)  #For looppi missä saadaan luotua läpimenoajat kärryille
-    
-    alotukset = {"Aloitus":alo }
-    Lapimenot = {"Lapimenoajat":lapimenoajat}  #Tallennetaan aloitusajat sekä läpimenoajat listoihin
-    print("Läpimenoajat", lapimenoajat)
-
-
         
 def erottele_reitit(df, in_ID, out_ID):
-    """[Erottelee yksittäiset reitit annetusta dataframesta. ]
+    """[Iteroi jokaisen dataframen rivin, tutkii milloin uusi kauppareissu alkaa ja lisää reissun tiedot sille luotuun objektiin.]
 
     Args:
-        df ([DataFrame]): [Tietokannasta haettu data, josta yksittäiset ajokerrat halutaan erotella.]
-        in_ID ([List]): [Sisäänkäynnin x- ja y-koordinaateista muodostettujen ID:iden lista. ]
-        out_ID ([List]): [Kassojen x- ja y-koordinaateista muodostettujen ID:iden lista.]
+        df ([DataFrame]): [Diskretisoitu dataframe]
+        in_ID ([list]): [Sisäänkäyntialueen diskretisoidut koordinaatit ID-muodossa.]
+        out_ID ([list]): [Kassa-alueen diskretisoidut koordinaatit ID-muodossa.]
 
     Returns:
-        [List]: [Palauttaa listan objekteja, joista jokainen sisältää yhden kauppareitin tiedot.]
+        [list]: [Sisältää yksittäisten reittien objektit.]
     """
+    
+    # Luodaan dataframeen sarakkeet, joilla seurataan onko rivin paikkakoordinaatit kassa- tai sisäänkäyntialueilla.
+    df["IN"] = df["grid_id"].isin(in_ID)
+    df["OUT"] = df["grid_id"].isin(out_ID)
+
+    # Näiden avulla seurataan, että useampi peräkkäinen rivi on kassa- tai sisäänkäyntialueilla.
+    df['fo_IN'] = df['IN'].shift(5)
+    df['fo_OUT'] = df['OUT'].shift(10)
+
     cleaned_xy = df.copy()
     erotellut_reitit = []      #tähän tallennetaan erotellut kauppareissut
     ajokerta = 0   # pidetään kirjaa kuinka monta kertaa kärry on ajanut kaupan läpi. Käytetään Kärryjen etsimiseen ja erotteluun
     reitti = Reitti()      #luodaan karry
     erotellut_reitit.append(reitti)     #lisätään ensimmäinen karry listaan, koska data alkaa yleensä kesken ajokerran 
-    matkalla = False
+    matkalla = False    
+
     
-    
-    for val in range(len(cleaned_xy["grid_id"])-3):
-        # Mitataan kahden rivin timestamppien erotusta
-        # Luodaan uusi karry-olio, kun kärry/kori saapuu ensimmäisen kerran sisäänkäynnin kohdalle.
-                                                                            # Tarkistetaan, että kaksi pistettä peräkkäin on sisäänkäyntialueella 
-                                                                            # (yritetään poissulkea signaalivirheestä alueelle tulleet pisteet)
-        if cleaned_xy["grid_id"][val] in in_ID and matkalla == False and  cleaned_xy["grid_id"][val+3] in in_ID:
+    for row in df.itertuples():
+        
+        if matkalla == False and row.IN  == True and row.IN == row.fo_IN:
+            # Aloitetaan matka ja luodaan uusi olio kaupparaissulle.
             matkalla = True
             ajokerta += 1
             reitti = Reitti()      
             erotellut_reitit.append(reitti)
 
-        # lopetetaan matka, kun kärry saapuu kassoille (tarkistetaan taas, että useampi piste on alueella peräkkäin)
-        elif cleaned_xy["grid_id"][val] in out_ID and cleaned_xy["grid_id"][val+3] in out_ID:
+        elif row.OUT == True and row.OUT == row.fo_OUT:
             matkalla = False
-            
-        # Lisätään rivin teidot objektiin, jos kärry on matkalla (tarkistetaan myös, ettei kesken matkaa aleta vahingossakaan keräämään toisen node_idn tietoja, vaikka eipä tätä kai pitäisi edes päästä tapahtumaan.
-        elif  matkalla == True and cleaned_xy.node_id[val+1] == cleaned_xy.node_id[val]:
-            erotellut_reitit[ajokerta].lisaa(ajokerta, cleaned_xy.timestamp[val],cleaned_xy.node_id[val],cleaned_xy["grid_id"][val], cleaned_xy.x_grid[val], cleaned_xy.y_grid[val])
-            
-        erotellut_reitit[ajokerta].yhdista_tiedot()
-
+        
+        elif matkalla == True:
+            erotellut_reitit[ajokerta].lisaa(ajokerta,row.node_id, row.timestamp,row.grid_id, row.x_grid, row.y_grid, row.dayofweek, row.current_hour, row.velocity_kmh, row.distance_grid)
+    
     return erotellut_reitit
 
 def reitit_dataframeksi(reitit):
@@ -135,14 +117,7 @@ def reitit_dataframeksi(reitit):
         [DataFrame]: [Palauttaa Dataframen, joka sisältää jokaisen datasta erotellun kauppareissun.]
     """
 
-
-    kauppareissut = pd.DataFrame(None,None,None,None,None)
-    # käysään kaikki reittiobjektit läpi ja muodostetaan lisätään ne vuorollaan dataframeen.
-    for kauppareissu in reitit:
-        kauppareissu.yhdista_tiedot()
-        reitti = pd.DataFrame(kauppareissu.tiedot)
-        # Lisätään kaikki ajokerrat vuorollaan dataframeen.
-        kauppareissut = kauppareissut.append(reitti,  ignore_index=True)
+    kauppareissut = pd.concat([pd.DataFrame({"ajokerta":a.ajokerta, "node_id":a.node_id, "timestamp":a.timestamp, "x":a.x, "y":a.y,"grid_id":a.ID, "velocity_kmh":a.velocity_kmh,"distance_grid":a.distance_grid, "kesto":a.timestamp[-1]-a.timestamp[0], "dayofweek":a.weekday, "current_hour":a.hour}) for a in reitit])
     return kauppareissut
 
 def plot_all_routes(df_reitit, grid_size):
@@ -177,3 +152,20 @@ def plot_unique_routes(df_reitit, grid_size, in_x, in_y, out_x, out_y):
         plt.legend([],[], frameon=False)
         plt.show()
         
+def get_lapimeno(reitit, minimi_määrä_dataa):        
+
+    alo = []
+    lapimenoajat = [] #Luodaan pari uutta listaa
+        
+
+    
+    for i in range(len(reitit)):
+        if len(reitit[i].node_id) > minimi_määrä_dataa:
+            alotus = reitit[i].timestamp[0]
+            lopetus = reitit[i].timestamp[-1]
+            lapimenoaika = (lopetus - alotus)
+            alo.append(alotus)
+            lapimenoajat.append(lapimenoaika)  #For looppi missä saadaan luotua läpimenoajat kärryille
+    
+    
+    return alo, lapimenoajat
