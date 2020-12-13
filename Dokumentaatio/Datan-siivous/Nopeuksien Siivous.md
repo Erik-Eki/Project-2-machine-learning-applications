@@ -1,6 +1,9 @@
 Datan Siivous - Nopeuksien Siivous
 =
 
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_4c2c9af04c8a8654e5bbc7b6d835cc62.png)
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_00d508cf061fba2bd1c0bd9886f7f4c4.png)
+
 ***(Huom. esimerkissä dataa on käsittelyssä 1 000 000 pistettä)***
 
 Kun datasta on poistettu selvät outlierit, on silti jäljellä muutamia outouksia, esim epärealistisen nopeasti liikkuvia pisteitä.
