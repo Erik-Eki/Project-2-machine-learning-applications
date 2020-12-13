@@ -1,6 +1,11 @@
 LocalOutlierFactor
 =
 
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_0c9849e37970df567c9deabb9c3effdb.png)
+
+![](https://gitlab.dclabra.fi/wiki/uploads/upload_de7f3f3059bd23c6bfa024ba69f84f7b.png)
+
+
 https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.LocalOutlierFactor.html
 
 **LocalOutlierFactor**(*LOF*) on valvomaton outlierien tunnistus algorytmi.
