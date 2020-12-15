@@ -16,9 +16,13 @@ class Reitti:
         self.x = []
         self.y = []
         self.ID = []
+        self.weekday = []
+        self.hour = []
+        self.speed_kmh = []
+        self.distance = []
       
         
-    def lisaa(self,ajokerta, node_id, timestamp, ID, x, y):
+    def lisaa(self,ajokerta, node_id, timestamp, ID, x, y, weekday, hour, vel, dist):
         """[Lisätään kerättävät tiedot objektin listoihin.]
 
         Args:
@@ -36,6 +40,7 @@ class Reitti:
         self.x.append(x)
         self.y.append(y)
 <<<<<<< HEAD
+<<<<<<< HEAD
         
     def yhdista_tiedot(self):
         """[Luo Dictionaryn, johon yhdistetään kaikki objektiin tallennettu data.]
@@ -47,6 +52,12 @@ class Reitti:
                    "x":self.x,
                    "y":self.y}
 =======
+=======
+        self.weekday.append(weekday)
+        self.hour.append(hour)
+        self.speed_kmh.append(vel)
+        self.distance.append(dist)
+>>>>>>> beea667bbf3b3610ca5a22997bc8b4c63b610fb1
 
 >>>>>>> 5aae8586775e71d19e0e5e35aa3c8e8496aeee71
 
@@ -167,7 +178,7 @@ def erottele_reitit(df, in_ID, out_ID):
             matkalla = False
         
         elif matkalla == True:
-            erotellut_reitit[ajokerta].lisaa(ajokerta,row.node_id, row.timestamp,row.grid_id, row.x_grid, row.y_grid)
+            erotellut_reitit[ajokerta].lisaa(ajokerta,row.node_id, row.timestamp,row.grid_id, row.x_grid, row.y_grid, row.dayofweek, row.current_hour, row.speed_kmh, row.distance)
     
 >>>>>>> 5aae8586775e71d19e0e5e35aa3c8e8496aeee71
     return erotellut_reitit
@@ -183,6 +194,7 @@ def reitit_dataframeksi(reitit):
     """
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     kauppareissut = pd.DataFrame(None,None,None,None,None)
     # käysään kaikki reittiobjektit läpi ja muodostetaan lisätään ne vuorollaan dataframeen.
@@ -196,6 +208,9 @@ def reitit_dataframeksi(reitit):
     reitt = []
     kauppareissut = kauppareissut.append([pd.DataFrame({"ajokerta":a.ajokerta, "node_id":a.node_id, "timestamp":a.timestamp, "x":a.x, "y":a.y,"grid_id":a.ID, "kesto":a.timestamp[-1]-a.timestamp[0] }) for a in reitit])
 >>>>>>> 5aae8586775e71d19e0e5e35aa3c8e8496aeee71
+=======
+    kauppareissut = pd.concat([pd.DataFrame({"ajokerta":a.ajokerta, "node_id":a.node_id, "timestamp":a.timestamp, "x":a.x, "y":a.y,"grid_id":a.ID, "speed_kmh":a.speed_kmh,"distance":a.distance, "kesto":a.timestamp[-1]-a.timestamp[0], "dayofweek":a.weekday, "current_hour":a.hour}) for a in reitit])
+>>>>>>> beea667bbf3b3610ca5a22997bc8b4c63b610fb1
     return kauppareissut
 
 def plot_all_routes(df_reitit, grid_size):
