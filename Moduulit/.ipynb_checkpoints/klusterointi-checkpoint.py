@@ -11,14 +11,12 @@ def df_to_features(df):
         if row.ajokerta != row.check:
             if len(df[df["ajokerta"] == row.ajokerta]["grid_id"].unique()) > 25:
                 idt = np.array(df[df["ajokerta"] == row.ajokerta]["grid_id"].value_counts().keys().tolist()[:25])
-
-<<<<<<< HEAD
-                rivit.append({"ajokerta":row.ajokerta, "node_id":row.node_id, 
-=======
-                rivit.append({"ajokerta":row.ajokerta, "node_id":row.node_id,"grid_id":row.grid_id, "time":row.time, 
->>>>>>> regressio_erik
+                start_row = np.array(df[df["ajokerta"] == row.ajokerta].index[0])
+                end_row = np.array(df[df["ajokerta"] == row.ajokerta].index[-1])
+                rivit.append({"ajokerta":row.ajokerta, "node_id":row.node_id,"grid_id":row.grid_id, "time":row.timestamp, 
                               "kesto":row.kesto, "dayofweek":row.dayofweek, 
-                              "current_hour":row.current_hour, "distance":row.distance, 
+                              "current_hour":row.current_hour, "distance":row.distance,
+                              "start":start_row, "end":end_row,
                               "0":idt[0], "1":idt[1], "2":idt[2], "3":idt[3],
                               "4":idt[4], "5":idt[5], "6":idt[6], "7":idt[7],
                               "8":idt[8], "9":idt[9], "10":idt[10], "11":idt[11],
