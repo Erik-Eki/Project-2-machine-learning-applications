@@ -4,7 +4,7 @@
 
 ## Loppuraportti
 
-https://gitlab.dclabra.fi/wiki/RBQGvRhISpq0tzcLdWrKtw
+https://github.com/Erik-Eki/Project-2-machine-learning-applications/wiki/Loppuraportti
 
 Loppuraportissa on esittely projektin vaiheista: Tietokannan pystytys ja benchmarkkaus, datan siivous, datan analysointia ja koneoppimistekniikoiden hyödyntämistä.
 
