@@ -2,17 +2,34 @@
 
 # Projekti 2 - Team Fox
 
-[Projektin moodle](https://devmoodle.kamit.fi/course/view.php?id=3348)
+## Loppuraportti
 
-# Gitlabin Wikissä on yleinen dokumentaatio.
+https://gitlab.dclabra.fi/wiki/RBQGvRhISpq0tzcLdWrKtw
+
+Loppuraportissa on esittely projektin vaiheista: Tietokannan pystytys ja benchmarkkaus, datan siivous, datan analysointia ja koneoppimistekniikoiden hyödyntämistä.
+
+## Kansiorakenne
+
+- Benchmark
+  - Sisältää tietokantojen benchmarkit.
+- Dokumentaatio
+  - Sisältää tarkan dokumentaation moduuleista ja eri ominaisuuksista.
+  - Monta alikategoriaa
+- Moduulit
+  - Sisältää kaikki moduulit.
+- Osat (Notebookit) sisältävät funktioita ja muita joista ei luotu moduuleita.
+
+---
+
+## Yleiset toimenpiteet
 
 Torstaisin tavataan koululla, muutoin ryvetään kotona itsesäälissä ja kuunnellaan David Bowieta.
 
-# Scrummaster
+## Scrummaster
 Muistaa pitää daily scrumit, demot ja retrot.
 
-# Product owner
+## Product owner
 Muistaa hoitaa gitlabiä kuin omaa vauvaa.
 
-# Devit
+## Devit
 Lukevat Ensimmäisen Mooseksen kirjan 9:25.
