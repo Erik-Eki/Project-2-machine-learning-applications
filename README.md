@@ -11,20 +11,29 @@ Loppuraportissa on esittely projektin vaiheista: Tietokannan pystytys ja benchma
 
 Projekti 2:sessa käsiteltiin eräästä kaupasta saatua koordinaattidataa kerättynä nodeista, jotka olivat kiinni koreissa. Dataa piti siivota ja sitten analysoida erilaisilla menetelmillä, kuten koneoppimisella.
 
-Ipywidget, jolla hakea dataa tietokannasta:
+### Demo
+
+#### Ipywidget, jolla hakea dataa tietokannasta:
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_f5ff7aac9c18b94dc0837ae5d967ff80.PNG)
 
-Eri kulkukerrat nodeille:
+#### Eri kulkukerrat nodeille:
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_6b4c93cd9184c31b024a576058aafece.png)
 
-Datan siivousvaiheet:
+#### Datan siivousvaiheet:
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_978fe3c6ed333c7160534e47c4a442fc.png)
 
-Klusteroitu samankaltaiset reitit:
+#### Klusteroitu samankaltaiset reitit:
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_433df8669ab6065e915f26df45e56b63.png)
 
-Regressiota ennustamaan kauppareitin kestosta x matka
+#### Regressiota ennustamaan kauppareitin kestosta x matka
+
 ![](https://gitlab.dclabra.fi/wiki/uploads/upload_b3d1fff7b2701cab03de2a1bd8954b09.PNG)
+
+---
 
 ## Kansiorakenne
 
